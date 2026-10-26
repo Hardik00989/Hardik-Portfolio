@@ -1,0 +1,32 @@
+name: portfolio
+description: A responsive animated developer portfolio built with Flutter Web.
+publish_to: none
+version: 1.0.0+1
+environment:
+  sdk: ^3.12.2
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.9
+  visibility_detector: ^0.4.0+2
+  url_launcher: ^6.3.3
+  web: ^1.1.1
+  flutter_animate: ^4.5.2
+  google_fonts: ^8.2.1
+  flutter_svg: ^2.3.2
+  flutter_riverpod: ^3.4.3
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/hardik.jpg
+    - assets/images/projects/
+    - assets/icons/
+    - assets/fonts/Sora-ExtraBold.ttf
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter.ttf
