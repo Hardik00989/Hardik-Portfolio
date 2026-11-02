@@ -4,6 +4,7 @@ class Project {
   final String linkLabel, previewLabel;
   final String? previewAsset, iconAsset;
   final List<String> highlights, stack;
+  final double previewTopCrop, previewBottomCrop, previewSourceAspectRatio;
   final int color;
   const Project(
     this.title,
@@ -18,5 +19,8 @@ class Project {
     this.iconAsset,
     this.highlights = const [],
     this.stack = const [],
+    this.previewTopCrop = 0,
+    this.previewBottomCrop = 0,
+    this.previewSourceAspectRatio = 16 / 9,
   });
 }

@@ -12,6 +12,19 @@ class ThemeController extends Notifier<ThemeMode> {
       state = state == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
 }
 
+final caseStudyPageProvider =
+    NotifierProvider.autoDispose<CaseStudyPageController, int>(
+      CaseStudyPageController.new,
+    );
+
+class CaseStudyPageController extends Notifier<int> {
+  @override
+  int build() => 0;
+  void select(int index) {
+    if (state != index) state = index;
+  }
+}
+
 @immutable
 class NavigationState {
   final int activeSection;

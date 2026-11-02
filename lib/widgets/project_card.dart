@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/project.dart';
 import '../theme/app_theme.dart';
 import 'shared.dart';
+import 'project_preview_image.dart';
 
 class ProjectCard extends StatefulWidget {
   final Project project;
@@ -29,79 +30,79 @@ class _ProjectCardState extends State<ProjectCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(14),
-            child: AspectRatio(
-              aspectRatio: 1.23,
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: DecoratedBox(
-                      decoration: AppTokens.glass(context).copyWith(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            Color.alphaBlend(
-                              Color(
-                                widget.project.color,
-                              ).withValues(alpha: .12),
-                              Theme.of(context).colorScheme.surface,
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: AppTokens.glass(context).copyWith(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color.alphaBlend(
+                    Color(widget.project.color).withValues(alpha: .1),
+                    Theme.of(context).colorScheme.surface,
+                  ),
+                  Color.alphaBlend(
+                    Theme.of(
+                      context,
+                    ).colorScheme.tertiary.withValues(alpha: .1),
+                    Theme.of(context).colorScheme.surface,
+                  ),
+                ],
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  '0${widget.index + 1} / ${widget.project.previewAsset == null ? 'ILLUSTRATIVE PREVIEW' : widget.project.previewLabel}',
+                  style: TextStyle(
+                    color: Theme.of(context).hintColor,
+                    fontSize: 9,
+                    letterSpacing: 1.1,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                AspectRatio(
+                  aspectRatio: 16 / 10,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: ColoredBox(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.surface.withValues(alpha: .35),
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: ClipRect(
+                            child: AnimatedScale(
+                              scale: hover ? 1.025 : 1,
+                              duration: const Duration(milliseconds: 250),
+                              child: widget.project.previewAsset != null
+                                  ? ProjectPreviewImage(
+                                      project: widget.project,
+                                      errorBuilder: (_) => _fallbackPreview(),
+                                    )
+                                  : _fallbackPreview(),
                             ),
-                            Color.alphaBlend(
-                              Theme.of(
-                                context,
-                              ).colorScheme.tertiary.withValues(alpha: .12),
-                              Theme.of(context).colorScheme.surface,
-                            ),
-                          ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                  Positioned.fill(
-                    child: AnimatedScale(
-                      scale: hover ? 1.06 : 1,
-                      duration: const Duration(milliseconds: 400),
-                      child: widget.project.previewAsset != null
-                          ? _imagePreview()
-                          : Center(
-                              child: Transform.rotate(
-                                angle: widget.index == 1 ? -.06 : .09,
-                                child: _mockup(),
-                              ),
-                            ),
-                    ),
+                ),
+                const SizedBox(height: 16),
+                AnimatedButton(
+                  label: widget.onVisit == null
+                      ? 'View project'
+                      : widget.project.linkLabel,
+                  onTap: widget.onVisit ?? widget.onView,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 14,
                   ),
-                  Positioned(
-                    top: 18,
-                    left: 18,
-                    child: Text(
-                      '0${widget.index + 1} / ${widget.project.previewAsset == null ? 'ILLUSTRATIVE PREVIEW' : widget.project.previewLabel}',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurface,
-                        fontSize: 9,
-                        letterSpacing: 1.1,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 16,
-                    right: 16,
-                    child: AnimatedOpacity(
-                      opacity: hover ? 1 : .9,
-                      duration: const Duration(milliseconds: 200),
-                      child: AnimatedButton(
-                        label: widget.onVisit == null
-                            ? 'View project'
-                            : widget.project.linkLabel,
-                        onTap: widget.onVisit ?? widget.onView,
-                        icon: Icons.north_east,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                  icon: Icons.north_east,
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 22),
@@ -170,21 +171,8 @@ class _ProjectCardState extends State<ProjectCard> {
       ),
     ),
   );
-  Widget _imagePreview() => Padding(
-    padding: const EdgeInsets.only(top: 42, bottom: 58, left: 20, right: 20),
-    child: Center(
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: Image.asset(
-          widget.project.previewAsset!,
-          fit: BoxFit.contain,
-          semanticLabel: '${widget.project.title} application screenshot',
-          filterQuality: FilterQuality.medium,
-          errorBuilder: (_, error, stackTrace) => _mockup(),
-        ),
-      ),
-    ),
-  );
+  Widget _fallbackPreview() =>
+      FittedBox(fit: BoxFit.scaleDown, child: _mockup());
 
   int get _previewKind => switch (widget.project.title) {
     'NovaStrike' => 0,

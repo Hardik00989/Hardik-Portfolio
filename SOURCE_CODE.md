@@ -74,7 +74,6 @@ flutter:
     - family: Inter
       fonts:
         - asset: assets/fonts/Inter.ttf
-
 ```
 
 
@@ -109,7 +108,6 @@ linter:
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options
-
 ```
 
 
@@ -137,7 +135,6 @@ class PortfolioApp extends ConsumerWidget {
     home: const PortfolioScreen(),
   );
 }
-
 ```
 
 
@@ -150,6 +147,7 @@ class Project {
   final String linkLabel, previewLabel;
   final String? previewAsset, iconAsset;
   final List<String> highlights, stack;
+  final double previewTopCrop, previewBottomCrop, previewSourceAspectRatio;
   final int color;
   const Project(
     this.title,
@@ -164,9 +162,11 @@ class Project {
     this.iconAsset,
     this.highlights = const [],
     this.stack = const [],
+    this.previewTopCrop = 0,
+    this.previewBottomCrop = 0,
+    this.previewSourceAspectRatio = 16 / 9,
   });
 }
-
 ```
 
 
@@ -271,7 +271,6 @@ abstract final class AppTokens {
     );
   }
 }
-
 ```
 
 
@@ -368,6 +367,8 @@ abstract final class PortfolioData {
       iconAsset: 'assets/images/projects/teampulse-icon.png',
       previewAsset: 'assets/images/projects/teampulse-dashboard.png',
       previewLabel: 'DASHBOARD SCREENSHOT',
+      previewTopCrop: 182 / 1080,
+      previewBottomCrop: 72 / 1080,
       stack: [
         'Flutter',
         'Dart',
@@ -433,6 +434,93 @@ abstract final class PortfolioData {
           'July 2026 - Present. Built a deterministic campaign generator seeded by level number. Designed a pseudo-3D renderer and object pooling for 60 fps with 400 bullets on low-end Android hardware. Added master, music, and effects audio channels with ducking and throttling; reduced camera shake, high-contrast enemy fire, and larger bullets; Google Play Games Services and AdMob. Includes 400+ tests covering game logic and UI.',
     ),
   ];
+  static const capabilities = [
+    (
+      icon: 'Flutter',
+      title: 'Cross-platform applications',
+      description:
+          'Responsive apps that bring attendance, tasks, authentication, and everyday workflows together across mobile, web, and desktop.',
+      tools: ['Flutter / Dart', 'Riverpod / Provider', 'REST APIs'],
+    ),
+    (
+      icon: 'Flame Engine',
+      title: 'Mobile game engineering',
+      description:
+          'Custom-rendered games with generated levels, carefully managed state, audio systems, accessibility options, and game-service integrations.',
+      tools: ['Flame Engine', 'CustomPainter', 'Play Games Services'],
+    ),
+    (
+      icon: 'Firebase',
+      title: 'Connected product features',
+      description:
+          'Cloud-backed features for sign-in, storage, notifications, and third-party services, built into the experience rather than bolted on afterward.',
+      tools: ['Firebase', 'Microsoft Graph', 'AdMob'],
+    ),
+  ];
+
+  static const projectStories = {
+    'Team Pulse': (
+      challenge:
+          'Bring attendance, leave, payroll, projects, and communication into a single employee-management experience that works across devices.',
+      approach:
+          'Used Flutter with Riverpod and GoRouter for the app, backed by Firebase Auth, Firestore, and Messaging. Geofenced check-in/out and live sessions connect attendance to the rest of the workflow.',
+      engineering:
+          'Desktop activity tracking includes break reminders and unfinished-session recovery. Screenshot uploads use OneDrive through Microsoft Graph, while project tasks support comments, attachments, and document previews.',
+      outcome:
+          'One codebase serving mobile, web, and desktop, with a live web application available to explore.',
+    ),
+    'Blocktopus': (
+      challenge:
+          'Build a complete block puzzle game without a game engine, including its board, octopus mascot, effects, progression, and persistence.',
+      approach:
+          'Rendered the experience with CustomPainter. An offline generator and depth-limited solver produced 2,000 levels across 20 chapters, rejecting unsolvable, trivial, and greedy-solvable puzzles.',
+      engineering:
+          'Immutable state snapshots power undo. Cloud saves merge conflicts, while achievements, leaderboards, a coach-mark tutorial, and pitch-ladder audio support progression and feedback.',
+      outcome:
+          'Published on Google Play, combining custom rendering, cloud progression, and a 40 MB app footprint.',
+    ),
+    'NovaStrike': (
+      challenge:
+          'Create a space shooter with a large campaign and dense action while keeping content generation, rendering, audio, and accessibility manageable.',
+      approach:
+          'Generated a deterministic 1,500-level campaign from level-number seeds. A custom pseudo-3D renderer and object pooling support dense bullet patterns without hand-authoring every stage.',
+      engineering:
+          'The audio system separates master, music, and effects channels with ducking and throttling. Accessibility options reduce camera shake and increase enemy-fire contrast and bullet size. 400+ tests cover game logic and UI.',
+      outcome:
+          'A published Google Play game combining generated content, custom rendering, game services, and AdMob integrations.',
+    ),
+  };
+
+  static const engineeringHighlights = [
+    (
+      value: '1,500',
+      label: 'Generated campaign levels',
+      project: 'NovaStrike',
+      detail:
+          'Deterministic level-number seeds replace hand-authored campaign content.',
+    ),
+    (
+      value: '2,000',
+      label: 'Validated puzzle levels',
+      project: 'Blocktopus',
+      detail:
+          'An offline generator and solver validate progression across 20 chapters.',
+    ),
+    (
+      value: '400+',
+      label: 'Game logic & UI tests',
+      project: 'NovaStrike',
+      detail:
+          'Automated checks cover the systems behind the space-shooter experience.',
+    ),
+    (
+      value: '3',
+      label: 'Platform families',
+      project: 'Team Pulse',
+      detail: 'Mobile, web, and desktop experiences from one Flutter codebase.',
+    ),
+  ];
+
   static const timeline = [
     (
       date: 'MAR 2026 - PRESENT',
@@ -460,15 +548,13 @@ abstract final class PortfolioData {
     ),
   ];
 }
-
 ```
 
 
 ## lib/utils/download.dart
 
 ```dart
-export 'download_stub.dart' if (dart.library.js_interop) 'download_web.dart';
-
+﻿export 'download_stub.dart' if (dart.library.js_interop) 'download_web.dart';
 ```
 
 
@@ -481,7 +567,6 @@ import 'package:url_launcher/url_launcher.dart';
 void downloadCv() {
   launchUrl(Uri.base.resolve(PortfolioData.cvFile));
 }
-
 ```
 
 
@@ -499,7 +584,6 @@ void downloadCv() {
   link.click();
   link.remove();
 }
-
 ```
 
 
@@ -622,12 +706,14 @@ class AnimatedButton extends StatefulWidget {
   final VoidCallback onTap;
   final bool filled;
   final IconData icon;
+  final EdgeInsetsGeometry padding;
   const AnimatedButton({
     super.key,
     required this.label,
     required this.onTap,
     this.filled = true,
     this.icon = Icons.north_east,
+    this.padding = const EdgeInsets.symmetric(horizontal: 25, vertical: 22),
   });
   @override
   State<AnimatedButton> createState() => _AnimatedButtonState();
@@ -665,7 +751,7 @@ class _AnimatedButtonState extends State<AnimatedButton> {
       child: TextButton(
         onPressed: widget.onTap,
         style: TextButton.styleFrom(
-          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 22),
+          padding: widget.padding,
           backgroundColor: Colors.transparent,
           foregroundColor: widget.filled
               ? Theme.of(context).colorScheme.onPrimary
@@ -697,7 +783,6 @@ class _AnimatedButtonState extends State<AnimatedButton> {
     ),
   );
 }
-
 ```
 
 
@@ -708,6 +793,7 @@ import 'package:flutter/material.dart';
 import '../models/project.dart';
 import '../theme/app_theme.dart';
 import 'shared.dart';
+import 'project_preview_image.dart';
 
 class ProjectCard extends StatefulWidget {
   final Project project;
@@ -735,79 +821,79 @@ class _ProjectCardState extends State<ProjectCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(14),
-            child: AspectRatio(
-              aspectRatio: 1.23,
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: DecoratedBox(
-                      decoration: AppTokens.glass(context).copyWith(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            Color.alphaBlend(
-                              Color(
-                                widget.project.color,
-                              ).withValues(alpha: .12),
-                              Theme.of(context).colorScheme.surface,
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: AppTokens.glass(context).copyWith(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color.alphaBlend(
+                    Color(widget.project.color).withValues(alpha: .1),
+                    Theme.of(context).colorScheme.surface,
+                  ),
+                  Color.alphaBlend(
+                    Theme.of(
+                      context,
+                    ).colorScheme.tertiary.withValues(alpha: .1),
+                    Theme.of(context).colorScheme.surface,
+                  ),
+                ],
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  '0${widget.index + 1} / ${widget.project.previewAsset == null ? 'ILLUSTRATIVE PREVIEW' : widget.project.previewLabel}',
+                  style: TextStyle(
+                    color: Theme.of(context).hintColor,
+                    fontSize: 9,
+                    letterSpacing: 1.1,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                AspectRatio(
+                  aspectRatio: 16 / 10,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: ColoredBox(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.surface.withValues(alpha: .35),
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: ClipRect(
+                            child: AnimatedScale(
+                              scale: hover ? 1.025 : 1,
+                              duration: const Duration(milliseconds: 250),
+                              child: widget.project.previewAsset != null
+                                  ? ProjectPreviewImage(
+                                      project: widget.project,
+                                      errorBuilder: (_) => _fallbackPreview(),
+                                    )
+                                  : _fallbackPreview(),
                             ),
-                            Color.alphaBlend(
-                              Theme.of(
-                                context,
-                              ).colorScheme.tertiary.withValues(alpha: .12),
-                              Theme.of(context).colorScheme.surface,
-                            ),
-                          ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                  Positioned.fill(
-                    child: AnimatedScale(
-                      scale: hover ? 1.06 : 1,
-                      duration: const Duration(milliseconds: 400),
-                      child: widget.project.previewAsset != null
-                          ? _imagePreview()
-                          : Center(
-                              child: Transform.rotate(
-                                angle: widget.index == 1 ? -.06 : .09,
-                                child: _mockup(),
-                              ),
-                            ),
-                    ),
+                ),
+                const SizedBox(height: 16),
+                AnimatedButton(
+                  label: widget.onVisit == null
+                      ? 'View project'
+                      : widget.project.linkLabel,
+                  onTap: widget.onVisit ?? widget.onView,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 14,
                   ),
-                  Positioned(
-                    top: 18,
-                    left: 18,
-                    child: Text(
-                      '0${widget.index + 1} / ${widget.project.previewAsset == null ? 'ILLUSTRATIVE PREVIEW' : widget.project.previewLabel}',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurface,
-                        fontSize: 9,
-                        letterSpacing: 1.1,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 16,
-                    right: 16,
-                    child: AnimatedOpacity(
-                      opacity: hover ? 1 : .9,
-                      duration: const Duration(milliseconds: 200),
-                      child: AnimatedButton(
-                        label: widget.onVisit == null
-                            ? 'View project'
-                            : widget.project.linkLabel,
-                        onTap: widget.onVisit ?? widget.onView,
-                        icon: Icons.north_east,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                  icon: Icons.north_east,
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 22),
@@ -876,21 +962,8 @@ class _ProjectCardState extends State<ProjectCard> {
       ),
     ),
   );
-  Widget _imagePreview() => Padding(
-    padding: const EdgeInsets.only(top: 42, bottom: 58, left: 20, right: 20),
-    child: Center(
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: Image.asset(
-          widget.project.previewAsset!,
-          fit: BoxFit.contain,
-          semanticLabel: '${widget.project.title} application screenshot',
-          filterQuality: FilterQuality.medium,
-          errorBuilder: (_, error, stackTrace) => _mockup(),
-        ),
-      ),
-    ),
-  );
+  Widget _fallbackPreview() =>
+      FittedBox(fit: BoxFit.scaleDown, child: _mockup());
 
   int get _previewKind => switch (widget.project.title) {
     'NovaStrike' => 0,
@@ -1046,7 +1119,6 @@ class _ProjectPreviewPainter extends CustomPainter {
   bool shouldRepaint(_ProjectPreviewPainter oldDelegate) =>
       oldDelegate.index != index;
 }
-
 ```
 
 
@@ -1412,7 +1484,6 @@ class OrbitPainter extends CustomPainter {
   bool shouldRepaint(OrbitPainter oldDelegate) =>
       oldDelegate.motion != motion || oldDelegate.color != color;
 }
-
 ```
 
 
@@ -1590,7 +1661,7 @@ class SkillsSection extends StatelessWidget {
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       const SectionTitle(
-        number: '02',
+        number: '05',
         label: 'MY TOOLKIT',
         title: 'The right tools.\nThe right touch.',
       ),
@@ -1699,7 +1770,7 @@ class ExperienceSection extends StatelessWidget {
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       const SectionTitle(
-        number: '04',
+        number: '06',
         label: 'EXPERIENCE & EDUCATION',
         title: 'Where I have worked.\nWhat I have learned.',
       ),
@@ -1814,7 +1885,6 @@ class _JourneyColumn extends StatelessWidget {
     ],
   );
 }
-
 ```
 
 
@@ -1891,7 +1961,7 @@ class _ContactSectionState extends ConsumerState<ContactSection> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SectionTitle(
-              number: '05',
+              number: '09',
               label: 'LET’S MAKE SOMETHING',
               title: 'Good things start\nwith a hello.',
             ),
@@ -2027,7 +2097,6 @@ class _ContactSectionState extends ConsumerState<ContactSection> {
     );
   }
 }
-
 ```
 
 
@@ -2041,6 +2110,7 @@ import '../providers/portfolio_providers.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../sections/hero_section.dart';
 import '../sections/content_sections.dart';
+import '../sections/extended_sections.dart';
 import '../sections/contact_section.dart';
 import '../widgets/shared.dart';
 import '../widgets/animated_logo.dart';
@@ -2062,13 +2132,17 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
   ScrollController get controller => viewport.controller;
   ValueNotifier<double> get scroll => viewport.parallax;
   ValueNotifier<Offset?> get cursor => viewport.cursor;
-  final keys = List.generate(6, (_) => GlobalKey());
+  final keys = List.generate(10, (_) => GlobalKey());
   static const labels = [
     'Home',
     'About',
-    'Skills',
+    'Expertise',
     'Work',
+    'Case studies',
+    'Skills',
     'Experience',
+    'Highlights',
+    'Resume',
     'Contact',
   ];
   @override
@@ -2131,8 +2205,8 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
         return Scaffold(
           endDrawer: Drawer(
             child: SafeArea(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+              child: ListView(
+                padding: EdgeInsets.zero,
                 children: [
                   const Padding(
                     padding: EdgeInsets.all(24),
@@ -2192,7 +2266,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                               ),
                             ),
                             _section(1, const AboutSection()),
-                            _section(2, const SkillsSection()),
+                            _section(2, const ExpertiseSection()),
                             _section(
                               3,
                               Column(
@@ -2273,8 +2347,12 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                                 ],
                               ),
                             ),
-                            _section(4, const ExperienceSection()),
-                            _section(5, const ContactSection()),
+                            _section(4, const CaseStudiesSection()),
+                            _section(5, const SkillsSection()),
+                            _section(6, const ExperienceSection()),
+                            _section(7, const HighlightsSection()),
+                            _section(8, const ResumeSection()),
+                            _section(9, const ContactSection()),
                             const SizedBox(height: 70),
                             const Divider(),
                             const SizedBox(height: 20),
@@ -2354,10 +2432,10 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                               const Spacer(),
                               if (desktop)
                                 ...List.generate(5, (i) {
-                                  final index = [1, 2, 3, 4, 5][i];
+                                  final index = [1, 3, 5, 6, 9][i];
                                   return Padding(
                                     padding: const EdgeInsets.symmetric(
-                                      horizontal: 12,
+                                      horizontal: 8,
                                     ),
                                     child: Consumer(
                                       builder: (context, ref, _) => NavLink(
@@ -2374,12 +2452,26 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                                   );
                                 }),
                               if (desktop) const SizedBox(width: 24),
+                              if (desktop)
+                                PopupMenuButton<int>(
+                                  tooltip: 'More sections',
+                                  icon: const Icon(Icons.more_horiz, size: 20),
+                                  onSelected: go,
+                                  itemBuilder: (_) => [2, 4, 7, 8]
+                                      .map(
+                                        (i) => PopupMenuItem(
+                                          value: i,
+                                          child: Text(labels[i]),
+                                        ),
+                                      )
+                                      .toList(),
+                                ),
                               const _ThemeToggle(),
-                              if (desktop && box.maxWidth >= 1200) ...[
+                              if (desktop && box.maxWidth >= 1360) ...[
                                 const SizedBox(width: 18),
                                 AnimatedButton(
                                   label: 'Let’s talk',
-                                  onTap: () => go(5),
+                                  onTap: () => go(9),
                                 ),
                               ],
                               if (!desktop)
@@ -2549,7 +2641,6 @@ class _NavbarBackdrop extends ConsumerWidget {
     );
   }
 }
-
 ```
 
 
@@ -2588,7 +2679,6 @@ class _NavbarBackdrop extends ConsumerWidget {
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>
-
 ```
 
 
@@ -2596,7 +2686,6 @@ class _NavbarBackdrop extends ConsumerWidget {
 
 ```xml
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#53f5ff"/><text x="16" y="43" font-family="Arial,sans-serif" font-size="31" font-weight="bold" fill="#080d1b">h.</text></svg>
-
 ```
 
 
@@ -2604,15 +2693,13 @@ class _NavbarBackdrop extends ConsumerWidget {
 
 ```json
 {"name":"Hardik Portfolio","short_name":"Portfolio","start_url":".","display":"standalone","background_color":"#080d1b","theme_color":"#53f5ff","description":"Developer and designer portfolio","icons":[{"src":"favicon.svg","sizes":"any","type":"image/svg+xml"}]}
-
 ```
 
 
 ## firebase.json
 
 ```json
-{"hosting":{"public":"build/web","ignore":["firebase.json","**/.*","**/node_modules/**"],"rewrites":[{"source":"**","destination":"/index.html"}]}}
-
+﻿{"hosting":{"public":"build/web","ignore":["firebase.json","**/.*","**/node_modules/**"],"rewrites":[{"source":"**","destination":"/index.html"}]}}
 ```
 
 
@@ -2685,7 +2772,6 @@ void main() {
     });
   }
 }
-
 ```
 
 ## lib/widgets/animated_logo.dart
@@ -2883,7 +2969,6 @@ class _AnimatedLogoState extends State<AnimatedLogo> {
     );
   }
 }
-
 ```
 
 ## lib/widgets/rotating_role.dart
@@ -2972,7 +3057,6 @@ class _RotatingRoleState extends State<RotatingRole> {
     ),
   );
 }
-
 ```
 
 ## lib/widgets/skill_icon.dart
@@ -3095,7 +3179,6 @@ class SkillIcon extends StatelessWidget {
     _ => Icons.code_rounded,
   }, size: 20);
 }
-
 ```
 
 ## lib/widgets/project_details.dart
@@ -3218,7 +3301,6 @@ class ProjectDetails extends StatelessWidget {
     ],
   );
 }
-
 ```
 
 ## lib/providers/portfolio_providers.dart
@@ -3236,6 +3318,19 @@ class ThemeController extends Notifier<ThemeMode> {
   ThemeMode build() => ThemeMode.dark;
   void toggle() =>
       state = state == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
+}
+
+final caseStudyPageProvider =
+    NotifierProvider.autoDispose<CaseStudyPageController, int>(
+      CaseStudyPageController.new,
+    );
+
+class CaseStudyPageController extends Notifier<int> {
+  @override
+  int build() => 0;
+  void select(int index) {
+    if (state != index) state = index;
+  }
 }
 
 @immutable
@@ -3296,7 +3391,6 @@ class ContactSubmissionController extends Notifier<bool> {
     }
   }
 }
-
 ```
 
 ## lib/widgets/portfolio_backdrop.dart
@@ -3366,7 +3460,6 @@ class _AmbientPainter extends CustomPainter {
       grid != oldDelegate.grid ||
       dark != oldDelegate.dark;
 }
-
 ```
 
 ## vercel.json
@@ -3383,7 +3476,6 @@ class _AmbientPainter extends CustomPainter {
     { "src": "/.*", "dest": "/index.html" }
   ]
 }
-
 ```
 
 ## scripts/vercel-build.sh
@@ -3418,5 +3510,1185 @@ flutter build web --release --no-web-resources-cdn --no-wasm-dry-run
 test -s build/web/index.html
 test -s build/web/flutter_bootstrap.js
 test -s build/web/main.dart.js
+```
 
+## lib/widgets/project_preview_image.dart
+
+```dart
+import 'package:flutter/material.dart';
+import '../models/project.dart';
+
+/// Crops the rendered preview while preserving the original screenshot file.
+class ProjectPreviewImage extends StatelessWidget {
+  final Project project;
+  final WidgetBuilder errorBuilder;
+  const ProjectPreviewImage({
+    super.key,
+    required this.project,
+    required this.errorBuilder,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final image = Image.asset(
+      project.previewAsset!,
+      fit: BoxFit.contain,
+      semanticLabel: '${project.title} application screenshot',
+      filterQuality: FilterQuality.medium,
+      errorBuilder: (context, error, stackTrace) => errorBuilder(context),
+    );
+    if (project.previewTopCrop == 0 && project.previewBottomCrop == 0) {
+      return image;
+    }
+    final visibleFraction =
+        1 - project.previewTopCrop - project.previewBottomCrop;
+    return AspectRatio(
+      aspectRatio: project.previewSourceAspectRatio / visibleFraction,
+      child: LayoutBuilder(
+        builder: (context, box) {
+          final fullHeight = box.maxWidth / project.previewSourceAspectRatio;
+          return Stack(
+            clipBehavior: Clip.hardEdge,
+            children: [
+              Positioned(
+                left: 0,
+                top: -fullHeight * project.previewTopCrop,
+                width: box.maxWidth,
+                height: fullHeight,
+                child: image,
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+```
+
+## lib/sections/extended_sections.dart
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../theme/app_theme.dart';
+import '../utils/download.dart';
+import '../utils/portfolio_data.dart';
+import '../widgets/scroll_driven_case_studies.dart';
+import '../widgets/shared.dart';
+import '../widgets/skill_icon.dart';
+
+class ExpertiseSection extends StatelessWidget {
+  const ExpertiseSection({super.key});
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const SectionTitle(
+        number: '02',
+        label: 'WHAT I BUILD',
+        title: 'Apps. Games.\nConnected experiences.',
+      ),
+      const SizedBox(height: 20),
+      _muted(
+        context,
+        'Three areas where my application work and game engineering come together.',
+      ),
+      const SizedBox(height: 32),
+      _TileGrid(
+        maxColumns: 3,
+        children: PortfolioData.capabilities
+            .map(
+              (item) => Container(
+                padding: const EdgeInsets.all(26),
+                decoration: AppTokens.glass(context),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.primary.withValues(alpha: .08),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: SkillIcon(skill: item.icon),
+                    ),
+                    const SizedBox(height: 26),
+                    Text(
+                      item.title,
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: -.8,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    _muted(context, item.description),
+                    const SizedBox(height: 24),
+                    Wrap(
+                      spacing: 7,
+                      runSpacing: 8,
+                      children: item.tools
+                          .map((tool) => _tag(context, tool))
+                          .toList(),
+                    ),
+                  ],
+                ),
+              ),
+            )
+            .toList(),
+      ),
+    ],
+  );
+}
+
+class CaseStudiesSection extends StatelessWidget {
+  const CaseStudiesSection({super.key});
+  @override
+  Widget build(BuildContext context) => const ScrollDrivenCaseStudies();
+}
+
+class _StoryPoint extends StatelessWidget {
+  final String label, text;
+  const _StoryPoint({required this.label, required this.text});
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(bottom: 20),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 10,
+            letterSpacing: 1.2,
+            fontWeight: FontWeight.w600,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
+        const SizedBox(height: 9),
+        _muted(context, text),
+      ],
+    ),
+  );
+}
+
+class HighlightsSection extends StatelessWidget {
+  const HighlightsSection({super.key});
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const SectionTitle(
+        number: '07',
+        label: 'ENGINEERING HIGHLIGHTS',
+        title: 'Small details.\nSubstantial systems.',
+      ),
+      const SizedBox(height: 20),
+      _muted(
+        context,
+        'Selected implementation details from my projects and résumé.',
+      ),
+      const SizedBox(height: 32),
+      _TileGrid(
+        maxColumns: 4,
+        children: PortfolioData.engineeringHighlights
+            .map(
+              (item) => Container(
+                padding: const EdgeInsets.all(24),
+                decoration: AppTokens.glass(context),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item.value,
+                      style: TextStyle(
+                        fontSize: 46,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: -2,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      item.label,
+                      style: const TextStyle(
+                        fontSize: 19,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    _muted(context, item.detail),
+                    const SizedBox(height: 20),
+                    _tag(context, item.project),
+                  ],
+                ),
+              ),
+            )
+            .toList(),
+      ),
+    ],
+  );
+}
+
+class ResumeSection extends StatelessWidget {
+  const ResumeSection({super.key});
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const SectionTitle(
+        number: '08',
+        label: 'TAKE A CLOSER LOOK',
+        title: 'The full picture.\nReady to download.',
+      ),
+      const SizedBox(height: 32),
+      Container(
+        padding: const EdgeInsets.all(28),
+        decoration: AppTokens.glass(context, radius: 20),
+        child: LayoutBuilder(
+          builder: (context, box) {
+            final intro = Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.description_outlined,
+                  size: 46,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                const SizedBox(height: 24),
+                const Text(
+                  'Hardik / Flutter Developer',
+                  style: TextStyle(
+                    fontSize: 27,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: -.8,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                _muted(
+                  context,
+                  'A portable overview of my professional experience, application and game projects, technical skills, and education.',
+                ),
+                const SizedBox(height: 28),
+                Wrap(
+                  spacing: 12,
+                  runSpacing: 12,
+                  children: [
+                    AnimatedButton(
+                      label: 'View résumé',
+                      icon: Icons.open_in_new,
+                      onTap: () => launchUrl(
+                        Uri.base.resolve(PortfolioData.cvFile),
+                        webOnlyWindowName: '_blank',
+                      ),
+                    ),
+                    AnimatedButton(
+                      label: 'Download CV',
+                      filled: false,
+                      icon: Icons.download_outlined,
+                      onTap: downloadCv,
+                    ),
+                  ],
+                ),
+              ],
+            );
+            final facts = Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const _StoryPoint(
+                  label: 'PROFESSIONAL EXPERIENCE',
+                  text:
+                      'Flutter Developer at VR Automations and SGN Solutions.',
+                ),
+                const _StoryPoint(
+                  label: 'SELECTED WORK',
+                  text: 'Team Pulse / Blocktopus / NovaStrike',
+                ),
+                const _StoryPoint(
+                  label: 'EDUCATION',
+                  text:
+                      'Master of Computer Applications and Bachelor of Computer Applications, Mullana.',
+                ),
+                _StoryPoint(
+                  label: 'BASED IN',
+                  text: '${PortfolioData.location}\n${PortfolioData.languages}',
+                ),
+              ],
+            );
+            return box.maxWidth < 760
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      intro,
+                      const SizedBox(height: 36),
+                      const Divider(),
+                      const SizedBox(height: 24),
+                      facts,
+                    ],
+                  )
+                : Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(flex: 6, child: intro),
+                      const SizedBox(width: 60),
+                      Expanded(flex: 4, child: facts),
+                    ],
+                  );
+          },
+        ),
+      ),
+    ],
+  );
+}
+
+class _TileGrid extends StatelessWidget {
+  final int maxColumns;
+  final List<Widget> children;
+  const _TileGrid({required this.maxColumns, required this.children});
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, box) {
+      final count = (box.maxWidth / 260).floor().clamp(1, maxColumns);
+      final width = (box.maxWidth - (count - 1) * 20) / count;
+      return Wrap(
+        spacing: 20,
+        runSpacing: 20,
+        children: List.generate(
+          children.length,
+          (i) => SizedBox(
+            width: width,
+            child: RevealOnScroll(delay: i * 70, child: children[i]),
+          ),
+        ),
+      );
+    },
+  );
+}
+
+Widget _muted(BuildContext context, String text) => Text(
+  text,
+  style: TextStyle(
+    fontSize: 14,
+    height: 1.8,
+    color: Theme.of(context).hintColor,
+  ),
+);
+
+Widget _tag(BuildContext context, String text) => Container(
+  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+  decoration: BoxDecoration(
+    color: Theme.of(context).colorScheme.primary.withValues(alpha: .07),
+    borderRadius: BorderRadius.circular(6),
+  ),
+  child: Text(
+    text,
+    style: TextStyle(
+      fontSize: 10,
+      color: Theme.of(context).colorScheme.primary,
+    ),
+  ),
+);
+```
+
+## lib/widgets/project_story_gallery.dart
+
+```dart
+import 'dart:ui' show PointerDeviceKind;
+import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../models/project.dart';
+import '../providers/portfolio_providers.dart';
+import '../theme/app_theme.dart';
+import '../utils/portfolio_data.dart';
+import 'project_preview_image.dart';
+import 'shared.dart';
+
+/// Snapping project rail, optionally driven by document scroll progress. Only the selected page is shared state;
+/// hover and the scroll controller belong to this gallery's lifecycle.
+class ProjectStoryGallery extends ConsumerStatefulWidget {
+  final ValueListenable<double>? scrollProgress;
+  final ValueChanged<int>? onPageRequested;
+  final double? cardHeight;
+  const ProjectStoryGallery({
+    super.key,
+    this.scrollProgress,
+    this.onPageRequested,
+    this.cardHeight,
+  });
+  @override
+  ConsumerState<ProjectStoryGallery> createState() =>
+      _ProjectStoryGalleryState();
+}
+
+class _ProjectStoryGalleryState extends ConsumerState<ProjectStoryGallery> {
+  late final PageController controller;
+  int requestedPage = 0;
+  @override
+  void initState() {
+    super.initState();
+    controller = PageController(
+      initialPage: ref.read(caseStudyPageProvider),
+      viewportFraction: .82,
+    );
+    requestedPage = ref.read(caseStudyPageProvider);
+    widget.scrollProgress?.addListener(syncFromScroll);
+    WidgetsBinding.instance.addPostFrameCallback((_) => syncFromScroll());
+  }
+
+  @override
+  void didUpdateWidget(covariant ProjectStoryGallery oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.scrollProgress != widget.scrollProgress) {
+      oldWidget.scrollProgress?.removeListener(syncFromScroll);
+      widget.scrollProgress?.addListener(syncFromScroll);
+    }
+    WidgetsBinding.instance.addPostFrameCallback((_) => syncFromScroll());
+  }
+
+  void syncFromScroll() {
+    if (!mounted || widget.scrollProgress == null || !controller.hasClients) {
+      return;
+    }
+    final target =
+        (widget.scrollProgress!.value * (PortfolioData.projects.length - 1))
+            .round();
+    if (target == requestedPage) return;
+    requestedPage = target;
+    controller.animateToPage(
+      target,
+      duration: Duration(
+        milliseconds: MediaQuery.disableAnimationsOf(context) ? 1 : 380,
+      ),
+      curve: Curves.easeOutCubic,
+    );
+  }
+
+  @override
+  void dispose() {
+    widget.scrollProgress?.removeListener(syncFromScroll);
+    controller.dispose();
+    super.dispose();
+  }
+
+  void moveTo(int page) {
+    if (!controller.hasClients) return;
+    if (widget.onPageRequested != null) {
+      widget.onPageRequested!(page.clamp(0, PortfolioData.projects.length - 1));
+      return;
+    }
+    controller.animateToPage(
+      page.clamp(0, PortfolioData.projects.length - 1),
+      duration: Duration(
+        milliseconds: MediaQuery.disableAnimationsOf(context) ? 1 : 420,
+      ),
+      curve: Curves.easeOutCubic,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final current = ref.watch(caseStudyPageProvider);
+    final projects = PortfolioData.projects;
+    return CallbackShortcuts(
+      bindings: {
+        const SingleActivator(LogicalKeyboardKey.arrowRight): () =>
+            moveTo(current + 1),
+        const SingleActivator(LogicalKeyboardKey.arrowLeft): () =>
+            moveTo(current - 1),
+      },
+      child: Focus(
+        child: LayoutBuilder(
+          builder: (context, box) => Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: widget.cardHeight ?? (box.maxWidth < 700 ? 560 : 540),
+                child: ScrollConfiguration(
+                  behavior: ScrollConfiguration.of(context).copyWith(
+                    dragDevices: {
+                      PointerDeviceKind.touch,
+                      PointerDeviceKind.mouse,
+                      PointerDeviceKind.trackpad,
+                      PointerDeviceKind.stylus,
+                    },
+                  ),
+                  child: PageView.builder(
+                    key: const ValueKey('project-story-rail'),
+                    controller: controller,
+                    padEnds: false,
+                    physics: widget.scrollProgress != null
+                        ? const NeverScrollableScrollPhysics()
+                        : null,
+                    allowImplicitScrolling: true,
+                    onPageChanged: ref
+                        .read(caseStudyPageProvider.notifier)
+                        .select,
+                    itemCount: projects.length,
+                    itemBuilder: (context, index) => Padding(
+                      padding: const EdgeInsets.only(right: 16),
+                      child: _StoryPoster(
+                        project: projects[index],
+                        index: index,
+                        onOpen: () => showDialog<void>(
+                          context: context,
+                          builder: (_) =>
+                              ProjectStoryDialog(project: projects[index]),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              if (widget.scrollProgress != null)
+                ValueListenableBuilder<double>(
+                  valueListenable: widget.scrollProgress!,
+                  builder: (context, value, _) => LinearProgressIndicator(
+                    value: value,
+                    minHeight: 2,
+                    backgroundColor: Theme.of(context).dividerColor,
+                  ),
+                )
+              else
+                LinearProgressIndicator(
+                  value: (current + 1) / projects.length,
+                  minHeight: 2,
+                ),
+              const SizedBox(height: 14),
+              Row(
+                children: [
+                  Semantics(
+                    liveRegion: true,
+                    child: Text(
+                      '${(current + 1).toString().padLeft(2, '0')} / ${projects.length.toString().padLeft(2, '0')}',
+                      style: TextStyle(
+                        fontSize: 12,
+                        letterSpacing: 2,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  if (box.maxWidth >= 450)
+                    ...List.generate(
+                      projects.length,
+                      (i) => Tooltip(
+                        message: 'Show story ${i + 1}: ${projects[i].title}',
+                        child: IconButton(
+                          onPressed: () => moveTo(i),
+                          icon: Icon(
+                            Icons.circle,
+                            size: i == current ? 9 : 6,
+                            color: i == current
+                                ? Theme.of(context).colorScheme.primary
+                                : Theme.of(
+                                    context,
+                                  ).hintColor.withValues(alpha: .4),
+                          ),
+                          constraints: const BoxConstraints(
+                            minWidth: 28,
+                            minHeight: 44,
+                          ),
+                          padding: const EdgeInsets.all(6),
+                        ),
+                      ),
+                    ),
+                  const Spacer(),
+                  IconButton(
+                    tooltip: 'Previous case study',
+                    onPressed: current == 0 ? null : () => moveTo(current - 1),
+                    icon: const Icon(Icons.arrow_back),
+                  ),
+                  IconButton(
+                    tooltip: 'Next case study',
+                    onPressed: current == projects.length - 1
+                        ? null
+                        : () => moveTo(current + 1),
+                    icon: const Icon(Icons.arrow_forward),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _StoryPoster extends StatefulWidget {
+  final Project project;
+  final int index;
+  final VoidCallback onOpen;
+  const _StoryPoster({
+    required this.project,
+    required this.index,
+    required this.onOpen,
+  });
+  @override
+  State<_StoryPoster> createState() => _StoryPosterState();
+}
+
+class _StoryPosterState extends State<_StoryPoster> {
+  bool hovered = false;
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    final project = widget.project;
+    return MouseRegion(
+      onEnter: (_) => setState(() => hovered = true),
+      onExit: (_) => setState(() => hovered = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 220),
+        decoration: AppTokens.glass(context, radius: 22).copyWith(
+          border: Border.all(
+            color: colors.primary.withValues(alpha: hovered ? .65 : .24),
+          ),
+        ),
+        child: Material(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(22),
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            onTap: widget.onOpen,
+            child: LayoutBuilder(
+              builder: (context, box) {
+                final compact = box.maxHeight < 360;
+                final padding = box.maxHeight < 250
+                    ? 12.0
+                    : box.maxWidth < 400
+                    ? 20.0
+                    : 28.0;
+                final showTags = box.maxHeight >= 450;
+                return Stack(
+                  children: [
+                    Positioned.fill(
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topRight,
+                            end: Alignment.bottomLeft,
+                            colors: [
+                              colors.tertiary.withValues(alpha: .3),
+                              colors.primary.withValues(alpha: .12),
+                              colors.surface,
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 24,
+                      right: -12,
+                      width: box.maxWidth * .72,
+                      height: box.maxHeight * .7,
+                      child: IgnorePointer(
+                        child: Opacity(
+                          opacity: .22,
+                          child: RepaintBoundary(
+                            child: Center(
+                              child: ProjectPreviewImage(
+                                project: project,
+                                errorBuilder: (_) => Icon(
+                                  Icons.devices,
+                                  size: 100,
+                                  color: colors.primary,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Positioned.fill(
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              colors.surface.withValues(alpha: .08),
+                              colors.surface.withValues(alpha: .5),
+                              colors.surface.withValues(alpha: .97),
+                            ],
+                            stops: const [0, .4, 1],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(padding),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (box.maxHeight >= 280)
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    'H / PROJECT STORY',
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      letterSpacing: 2,
+                                      color: colors.primary,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: colors.onSurface.withValues(
+                                        alpha: .3,
+                                      ),
+                                    ),
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: const Text(
+                                    'LIVE',
+                                    style: TextStyle(fontSize: 9),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          const Spacer(),
+                          Text(
+                            project.category,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 9,
+                              letterSpacing: 1.6,
+                              color: colors.primary,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            project.title,
+                            maxLines: compact ? 1 : 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: box.maxWidth < 340 ? 28 : 42,
+                              height: 1.05,
+                              letterSpacing: -1.3,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          if (!compact) ...[
+                            const SizedBox(height: 12),
+                            Text(
+                              project.description,
+                              maxLines: box.maxHeight >= 450 ? 3 : 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 13,
+                                height: 1.7,
+                                color: colors.onSurface.withValues(alpha: .8),
+                              ),
+                            ),
+                          ],
+                          if (showTags) ...[
+                            const SizedBox(height: 14),
+                            Wrap(
+                              spacing: 6,
+                              runSpacing: 6,
+                              children: project.stack
+                                  .take(3)
+                                  .map(
+                                    (name) => Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 9,
+                                        vertical: 6,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: colors.surface.withValues(
+                                          alpha: .65,
+                                        ),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Text(
+                                        name,
+                                        style: const TextStyle(fontSize: 10),
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                          ],
+                          const SizedBox(height: 16),
+                          AnimatedButton(
+                            label: 'View story',
+                            icon: Icons.arrow_forward,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: compact ? 10 : 14,
+                            ),
+                            onTap: widget.onOpen,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ProjectStoryDialog extends StatelessWidget {
+  final Project project;
+  const ProjectStoryDialog({super.key, required this.project});
+  @override
+  Widget build(BuildContext context) {
+    final story = PortfolioData.projectStories[project.title]!;
+    final size = MediaQuery.sizeOf(context);
+    return Dialog(
+      insetPadding: EdgeInsets.all(size.width < 600 ? 16 : 40),
+      clipBehavior: Clip.antiAlias,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: 960, maxHeight: size.height * .9),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 16, 12, 12),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      project.title,
+                      style: const TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    tooltip: 'Close project story',
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.close),
+                  ),
+                ],
+              ),
+            ),
+            const Divider(height: 1),
+            Flexible(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: size.width < 600 ? 200 : 300,
+                      width: double.infinity,
+                      child: Center(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: ProjectPreviewImage(
+                            project: project,
+                            errorBuilder: (_) =>
+                                const Icon(Icons.devices, size: 60),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 28),
+                    _StoryParagraph(
+                      title: 'The challenge',
+                      text: story.challenge,
+                    ),
+                    _StoryParagraph(
+                      title: 'The approach',
+                      text: story.approach,
+                    ),
+                    _StoryParagraph(
+                      title: 'Engineering details',
+                      text: story.engineering,
+                    ),
+                    _StoryParagraph(title: 'The outcome', text: story.outcome),
+                    const Text(
+                      'Technology',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: project.stack
+                          .map((name) => Chip(label: Text(name)))
+                          .toList(),
+                    ),
+                    const SizedBox(height: 14),
+                    ExpansionTile(
+                      tilePadding: EdgeInsets.zero,
+                      title: const Text('Implementation notes'),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: Text(
+                            project.details,
+                            style: const TextStyle(fontSize: 14, height: 1.8),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    AnimatedButton(
+                      label: project.linkLabel,
+                      onTap: () => launchUrl(
+                        Uri.parse(project.url),
+                        mode: LaunchMode.externalApplication,
+                        webOnlyWindowName: '_blank',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _StoryParagraph extends StatelessWidget {
+  final String title, text;
+  const _StoryParagraph({required this.title, required this.text});
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(bottom: 24),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+        ),
+        const SizedBox(height: 10),
+        Text(
+          text,
+          style: TextStyle(
+            fontSize: 14,
+            height: 1.8,
+            color: Theme.of(context).hintColor,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+```
+
+## lib/widgets/scroll_driven_case_studies.dart
+
+```dart
+import 'dart:math' as math;
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/portfolio_providers.dart';
+import '../utils/portfolio_data.dart';
+import 'project_story_gallery.dart';
+
+/// A document-scroll pin, not a wheel interceptor. Native vertical gestures
+/// advance the stories and naturally leave the section after the final project.
+class ScrollDrivenCaseStudies extends ConsumerStatefulWidget {
+  static const stickyTop = 96.0;
+  const ScrollDrivenCaseStudies({super.key});
+  @override
+  ConsumerState<ScrollDrivenCaseStudies> createState() =>
+      _ScrollDrivenCaseStudiesState();
+}
+
+class _ScrollDrivenCaseStudiesState
+    extends ConsumerState<ScrollDrivenCaseStudies> {
+  final anchor = GlobalKey();
+  final pinOffset = ValueNotifier<double>(0);
+  final progress = ValueNotifier<double>(0);
+  late final ScrollController documentScroll;
+  double travel = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    documentScroll = ref.read(viewportProvider).controller;
+    documentScroll.addListener(updateFromScroll);
+  }
+
+  void updateFromScroll() {
+    if (!mounted || travel <= 0) return;
+    final box = anchor.currentContext?.findRenderObject() as RenderBox?;
+    if (box == null || !box.hasSize) return;
+    final offset =
+        (ScrollDrivenCaseStudies.stickyTop - box.localToGlobal(Offset.zero).dy)
+            .clamp(0.0, travel);
+    pinOffset.value = offset;
+    progress.value = offset / travel;
+  }
+
+  void goToStory(int index) {
+    final box = anchor.currentContext?.findRenderObject() as RenderBox?;
+    if (box == null || !documentScroll.hasClients) return;
+    final start =
+        documentScroll.offset +
+        box.localToGlobal(Offset.zero).dy -
+        ScrollDrivenCaseStudies.stickyTop;
+    final target = start + index / (PortfolioData.projects.length - 1) * travel;
+    documentScroll.animateTo(
+      target.clamp(0.0, documentScroll.position.maxScrollExtent),
+      duration: Duration(
+        milliseconds: MediaQuery.disableAnimationsOf(context) ? 1 : 650,
+      ),
+      curve: Curves.easeInOutCubic,
+    );
+  }
+
+  @override
+  void dispose() {
+    documentScroll.removeListener(updateFromScroll);
+    pinOffset.dispose();
+    progress.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    ref.watch(viewportProvider);
+    final viewport = MediaQuery.sizeOf(context);
+    return LayoutBuilder(
+      builder: (context, box) {
+        final desktop = box.maxWidth >= 900;
+        final panelHeight = (viewport.height - 112).clamp(300.0, 900.0);
+        final introWidth = (box.maxWidth * .23).clamp(210.0, 270.0);
+        final introHeight = viewport.height < 700 ? 64.0 : 96.0;
+        final galleryWidth = desktop
+            ? box.maxWidth - introWidth - 28
+            : box.maxWidth;
+        final cardHeight = desktop
+            ? math
+                  .min((galleryWidth * .82 - 16) / 1.48, panelHeight - 80)
+                  .clamp(180.0, 560.0)
+            : (panelHeight - introHeight - 12 - 80).clamp(140.0, 520.0);
+        travel =
+            (PortfolioData.projects.length - 1) *
+            (panelHeight * .6).clamp(280.0, 520.0);
+        WidgetsBinding.instance.addPostFrameCallback((_) => updateFromScroll());
+        final intro = _GalleryIntro(
+          compact: !desktop,
+          showHint: desktop ? viewport.height >= 650 : viewport.height >= 700,
+        );
+        final gallery = ProjectStoryGallery(
+          scrollProgress: progress,
+          onPageRequested: goToStory,
+          cardHeight: cardHeight,
+        );
+        return SizedBox(
+          key: anchor,
+          height: panelHeight + travel,
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: ValueListenableBuilder<double>(
+              valueListenable: pinOffset,
+              child: SizedBox(
+                key: const ValueKey('pinned-case-study-panel'),
+                height: panelHeight,
+                child: desktop
+                    ? Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(width: introWidth, child: intro),
+                          const SizedBox(width: 28),
+                          Expanded(child: gallery),
+                        ],
+                      )
+                    : Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            SizedBox(height: introHeight, child: intro),
+                            const SizedBox(height: 12),
+                            gallery,
+                          ],
+                        ),
+                      ),
+              ),
+              builder: (context, value, child) =>
+                  Transform.translate(offset: Offset(0, value), child: child),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _GalleryIntro extends StatelessWidget {
+  final bool compact, showHint;
+  const _GalleryIntro({required this.compact, required this.showHint});
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '04 / PROJECT STORIES',
+          style: TextStyle(
+            fontSize: 10,
+            letterSpacing: 1.8,
+            fontWeight: FontWeight.w600,
+            color: colors.primary,
+          ),
+        ),
+        SizedBox(height: compact ? 8 : 22),
+        Text(
+          compact ? 'Behind the screens.' : 'Behind\nthe screens.',
+          maxLines: compact ? 1 : 3,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            fontSize: compact ? 28 : 48,
+            height: 1.05,
+            letterSpacing: compact ? -1 : -2.5,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        if (showHint) ...[
+          SizedBox(height: compact ? 8 : 24),
+          Text(
+            compact
+                ? 'Swipe up to explore three project stories.'
+                : 'Three projects, one at a time. Scroll down or swipe up to explore each story, then continue through the portfolio.',
+            maxLines: compact ? 1 : 8,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: compact ? 12 : 14,
+              height: 1.7,
+              color: Theme.of(context).hintColor,
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+}
 ```

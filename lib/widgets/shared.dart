@@ -114,12 +114,14 @@ class AnimatedButton extends StatefulWidget {
   final VoidCallback onTap;
   final bool filled;
   final IconData icon;
+  final EdgeInsetsGeometry padding;
   const AnimatedButton({
     super.key,
     required this.label,
     required this.onTap,
     this.filled = true,
     this.icon = Icons.north_east,
+    this.padding = const EdgeInsets.symmetric(horizontal: 25, vertical: 22),
   });
   @override
   State<AnimatedButton> createState() => _AnimatedButtonState();
@@ -157,7 +159,7 @@ class _AnimatedButtonState extends State<AnimatedButton> {
       child: TextButton(
         onPressed: widget.onTap,
         style: TextButton.styleFrom(
-          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 22),
+          padding: widget.padding,
           backgroundColor: Colors.transparent,
           foregroundColor: widget.filled
               ? Theme.of(context).colorScheme.onPrimary

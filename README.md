@@ -150,3 +150,15 @@ Import the repository into Vercel with the repository root as Root Directory and
 The project source `web/` directory is a template, not the deployment output. `firebase.json` configures Firebase only. A successful Vercel source upload without the Flutter build can still show 404 at the deployed URL. The No checks configured message refers to optional deployment checks and is not a build failure.
 
 For a local build-script check using an already installed matching SDK, set `PORTFOLIO_FLUTTER_SDK` to its absolute path before running the script. On Windows with Git Bash, use a path such as `/c/flutter/src/flutter`.
+
+
+## Expanded portfolio
+
+The page has ten navigable sections: Home, About, Expertise, Work, Case studies, Skills, Experience, Highlights, Resume, and Contact. Expertise describes application, game, and integration capabilities. A pinned, vertically controlled project-story gallery opens full case-study dialogs explaining challenges, approaches, engineering details, and outcomes from the supplied resume. Engineering highlights surface the existing 1,500 campaign levels, 2,000 validated puzzles, 400+ tests, and three platform families. Resume offers direct view/download actions.
+
+The primary desktop navigation remains compact, with the additional sections accessible through More sections. The mobile drawer scrolls so all entries remain reachable on short viewports. Team Pulse, Blocktopus, and NovaStrike retain their requested order, screenshots, and live destinations. The expansion introduces no repeating background timers and retains the offscreen animation safeguards.
+
+
+## Behind the screens gallery
+
+The case-study section pins below the navbar while native vertical wheel scrolling or upward touch swipes advance through three project stories one at a time. It releases after the final story and reverses when scrolling back. Desktop uses a left introduction, wide cinematic cards, a next-card preview, and a progress line; mobile stacks a compact introduction above a fitted card. Previous/next controls, dot selection on wider layouts, and keyboard arrows also scroll to the selected story. Full stories open in responsive, scrollable dialogs, preserving the selected project when closed. `caseStudyPageProvider` holds selection in Riverpod; the page controller and hover state remain local. The gallery has no autoplay timer or per-frame backdrop blur.
