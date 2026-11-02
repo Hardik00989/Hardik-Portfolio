@@ -169,7 +169,7 @@ class SkillsSection extends StatelessWidget {
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       const SectionTitle(
-        number: '02',
+        number: '05',
         label: 'MY TOOLKIT',
         title: 'The right tools.\nThe right touch.',
       ),
@@ -278,7 +278,7 @@ class ExperienceSection extends StatelessWidget {
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       const SectionTitle(
-        number: '04',
+        number: '06',
         label: 'EXPERIENCE & EDUCATION',
         title: 'Where I have worked.\nWhat I have learned.',
       ),

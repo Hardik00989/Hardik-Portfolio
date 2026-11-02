@@ -5,6 +5,7 @@ import '../providers/portfolio_providers.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../sections/hero_section.dart';
 import '../sections/content_sections.dart';
+import '../sections/extended_sections.dart';
 import '../sections/contact_section.dart';
 import '../widgets/shared.dart';
 import '../widgets/animated_logo.dart';
@@ -26,13 +27,17 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
   ScrollController get controller => viewport.controller;
   ValueNotifier<double> get scroll => viewport.parallax;
   ValueNotifier<Offset?> get cursor => viewport.cursor;
-  final keys = List.generate(6, (_) => GlobalKey());
+  final keys = List.generate(10, (_) => GlobalKey());
   static const labels = [
     'Home',
     'About',
-    'Skills',
+    'Expertise',
     'Work',
+    'Case studies',
+    'Skills',
     'Experience',
+    'Highlights',
+    'Resume',
     'Contact',
   ];
   @override
@@ -95,8 +100,8 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
         return Scaffold(
           endDrawer: Drawer(
             child: SafeArea(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+              child: ListView(
+                padding: EdgeInsets.zero,
                 children: [
                   const Padding(
                     padding: EdgeInsets.all(24),
@@ -156,7 +161,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                               ),
                             ),
                             _section(1, const AboutSection()),
-                            _section(2, const SkillsSection()),
+                            _section(2, const ExpertiseSection()),
                             _section(
                               3,
                               Column(
@@ -237,8 +242,12 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                                 ],
                               ),
                             ),
-                            _section(4, const ExperienceSection()),
-                            _section(5, const ContactSection()),
+                            _section(4, const CaseStudiesSection()),
+                            _section(5, const SkillsSection()),
+                            _section(6, const ExperienceSection()),
+                            _section(7, const HighlightsSection()),
+                            _section(8, const ResumeSection()),
+                            _section(9, const ContactSection()),
                             const SizedBox(height: 70),
                             const Divider(),
                             const SizedBox(height: 20),
@@ -318,10 +327,10 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                               const Spacer(),
                               if (desktop)
                                 ...List.generate(5, (i) {
-                                  final index = [1, 2, 3, 4, 5][i];
+                                  final index = [1, 3, 5, 6, 9][i];
                                   return Padding(
                                     padding: const EdgeInsets.symmetric(
-                                      horizontal: 12,
+                                      horizontal: 8,
                                     ),
                                     child: Consumer(
                                       builder: (context, ref, _) => NavLink(
@@ -338,12 +347,26 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                                   );
                                 }),
                               if (desktop) const SizedBox(width: 24),
+                              if (desktop)
+                                PopupMenuButton<int>(
+                                  tooltip: 'More sections',
+                                  icon: const Icon(Icons.more_horiz, size: 20),
+                                  onSelected: go,
+                                  itemBuilder: (_) => [2, 4, 7, 8]
+                                      .map(
+                                        (i) => PopupMenuItem(
+                                          value: i,
+                                          child: Text(labels[i]),
+                                        ),
+                                      )
+                                      .toList(),
+                                ),
                               const _ThemeToggle(),
-                              if (desktop && box.maxWidth >= 1200) ...[
+                              if (desktop && box.maxWidth >= 1360) ...[
                                 const SizedBox(width: 18),
                                 AnimatedButton(
                                   label: 'Let’s talk',
-                                  onTap: () => go(5),
+                                  onTap: () => go(9),
                                 ),
                               ],
                               if (!desktop)

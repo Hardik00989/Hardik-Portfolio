@@ -68,7 +68,7 @@ class _ContactSectionState extends ConsumerState<ContactSection> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SectionTitle(
-              number: '05',
+              number: '09',
               label: 'LET’S MAKE SOMETHING',
               title: 'Good things start\nwith a hello.',
             ),
