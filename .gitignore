@@ -33,6 +33,9 @@ migrate_working_dir/
 /build/
 /coverage/
 
+# Vercel local project metadata and the build-time Flutter SDK cache
+/.vercel/
+
 # Symbolication related
 app.*.symbols
 

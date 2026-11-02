@@ -139,3 +139,14 @@ The contact notifier prevents duplicate submissions and safely resets pending st
 ## Neon glass theme
 
 Dark mode is the default, managed by Riverpod. The design uses a navy base, cyan/violet gradient actions, translucent gradient panels, fine luminous borders, and restrained hover glows. The static ambient light/grid backdrop is cached in its own RepaintBoundary. Panels use translucent gradients instead of per-card BackdropFilter effects; only the desktop navbar uses a small blur. Light mode remains available with a corresponding cool-toned palette. The browser loading screen, favicon, and manifest match the new default.
+
+
+## Vercel
+
+`vercel.json` sets the framework to Other, runs `bash scripts/vercel-build.sh`, and publishes `build/web`. The script provisions Flutter 3.44.2 (Dart 3.12.2), resolves packages, and builds the release application with local CanvasKit resources. The Flutter SDK version and commit are pinned to the version used for development. File-system routes serve real JS, fonts, PDFs, and images before falling back to index.html.
+
+Import the repository into Vercel with the repository root as Root Directory and Framework Preset Other. The checked-in configuration supplies the build command and output directory; remove conflicting dashboard overrides. Deploy the latest main commit containing vercel.json, rather than redeploying the earlier source-only commit.
+
+The project source `web/` directory is a template, not the deployment output. `firebase.json` configures Firebase only. A successful Vercel source upload without the Flutter build can still show 404 at the deployed URL. The No checks configured message refers to optional deployment checks and is not a build failure.
+
+For a local build-script check using an already installed matching SDK, set `PORTFOLIO_FLUTTER_SDK` to its absolute path before running the script. On Windows with Git Bash, use a path such as `/c/flutter/src/flutter`.
