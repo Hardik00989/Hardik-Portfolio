@@ -86,6 +86,8 @@ abstract final class PortfolioData {
       'https://team-pulse-23aee.web.app/',
       0xFFF0E1D1,
       iconAsset: 'assets/images/projects/teampulse-icon.png',
+      previewAsset: 'assets/images/projects/teampulse-dashboard.png',
+      previewLabel: 'DASHBOARD SCREENSHOT',
       stack: [
         'Flutter',
         'Dart',

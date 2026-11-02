@@ -1,7 +1,7 @@
 class Project {
   final String title, category, description, url;
   final String details;
-  final String linkLabel;
+  final String linkLabel, previewLabel;
   final String? previewAsset, iconAsset;
   final List<String> highlights, stack;
   final int color;
@@ -13,6 +13,7 @@ class Project {
     this.color, {
     this.details = '',
     this.linkLabel = 'Visit live app',
+    this.previewLabel = 'GOOGLE PLAY SCREENSHOT',
     this.previewAsset,
     this.iconAsset,
     this.highlights = const [],

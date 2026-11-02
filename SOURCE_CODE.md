@@ -147,7 +147,7 @@ class PortfolioApp extends ConsumerWidget {
 class Project {
   final String title, category, description, url;
   final String details;
-  final String linkLabel;
+  final String linkLabel, previewLabel;
   final String? previewAsset, iconAsset;
   final List<String> highlights, stack;
   final int color;
@@ -159,6 +159,7 @@ class Project {
     this.color, {
     this.details = '',
     this.linkLabel = 'Visit live app',
+    this.previewLabel = 'GOOGLE PLAY SCREENSHOT',
     this.previewAsset,
     this.iconAsset,
     this.highlights = const [],
@@ -365,6 +366,8 @@ abstract final class PortfolioData {
       'https://team-pulse-23aee.web.app/',
       0xFFF0E1D1,
       iconAsset: 'assets/images/projects/teampulse-icon.png',
+      previewAsset: 'assets/images/projects/teampulse-dashboard.png',
+      previewLabel: 'DASHBOARD SCREENSHOT',
       stack: [
         'Flutter',
         'Dart',
@@ -767,7 +770,7 @@ class _ProjectCardState extends State<ProjectCard> {
                       scale: hover ? 1.06 : 1,
                       duration: const Duration(milliseconds: 400),
                       child: widget.project.previewAsset != null
-                          ? _storePreview()
+                          ? _imagePreview()
                           : Center(
                               child: Transform.rotate(
                                 angle: widget.index == 1 ? -.06 : .09,
@@ -780,7 +783,7 @@ class _ProjectCardState extends State<ProjectCard> {
                     top: 18,
                     left: 18,
                     child: Text(
-                      '0${widget.index + 1} / ${widget.project.previewAsset == null ? 'ILLUSTRATIVE PREVIEW' : 'GOOGLE PLAY SCREENSHOT'}',
+                      '0${widget.index + 1} / ${widget.project.previewAsset == null ? 'ILLUSTRATIVE PREVIEW' : widget.project.previewLabel}',
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onSurface,
                         fontSize: 9,
@@ -873,7 +876,7 @@ class _ProjectCardState extends State<ProjectCard> {
       ),
     ),
   );
-  Widget _storePreview() => Padding(
+  Widget _imagePreview() => Padding(
     padding: const EdgeInsets.only(top: 42, bottom: 58, left: 20, right: 20),
     child: Center(
       child: ClipRRect(
@@ -881,7 +884,7 @@ class _ProjectCardState extends State<ProjectCard> {
         child: Image.asset(
           widget.project.previewAsset!,
           fit: BoxFit.contain,
-          semanticLabel: '${widget.project.title} screenshot from Google Play',
+          semanticLabel: '${widget.project.title} application screenshot',
           filterQuality: FilterQuality.medium,
           errorBuilder: (_, error, stackTrace) => _mockup(),
         ),

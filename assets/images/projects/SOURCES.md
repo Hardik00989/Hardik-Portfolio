@@ -17,3 +17,8 @@ Google Play image renditions are bundled locally: 128px icon and 480px-wide scre
 # TeamPulse icon
 
 Copied from the user-supplied local project: Desktop/team-pulse/assets/icons/app_icon.png.
+
+
+# TeamPulse dashboard screenshot
+
+Original image supplied by the user as Desktop/teampulse-dashboard.png, copied unchanged into the portfolio assets.
