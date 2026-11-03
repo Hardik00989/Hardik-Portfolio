@@ -62,10 +62,10 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
     final box = keys[index].currentContext?.findRenderObject() as RenderBox?;
     if (box == null) return;
     controller.animateTo(
-      (controller.offset + box.localToGlobal(Offset.zero).dy - 105).clamp(
-        0,
-        controller.position.maxScrollExtent,
-      ),
+      (controller.offset +
+              box.localToGlobal(Offset.zero).dy -
+              (AppTokens.navbarHeight + 20))
+          .clamp(0, controller.position.maxScrollExtent),
       duration: Duration(
         milliseconds: MediaQuery.disableAnimationsOf(context) ? 1 : 850,
       ),
@@ -150,7 +150,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            const SizedBox(height: 75),
+                            const SizedBox(height: AppTokens.navbarHeight),
                             SizedBox(
                               key: keys[0],
                               child: HeroSection(
@@ -264,7 +264,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                                   ),
                                 ),
                                 Text(
-                                  '© ${DateTime.now().year} ${PortfolioData.name}. Built with care & Flutter.',
+                                  '© ${DateTime.now().year} ${PortfolioData.name}.',
                                   style: TextStyle(
                                     fontSize: 10,
                                     color: Theme.of(context).hintColor,
@@ -307,7 +307,8 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: padding),
                         child: SizedBox(
-                          height: 80,
+                          key: const ValueKey('portfolio-navbar'),
+                          height: AppTokens.navbarHeight,
                           child: Row(
                             children: [
                               SizedBox(
@@ -359,7 +360,6 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                                       )
                                       .toList(),
                                 ),
-                              const _ThemeToggle(),
                               if (desktop && box.maxWidth >= 1360) ...[
                                 const SizedBox(width: 18),
                                 AnimatedButton(
@@ -408,7 +408,15 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
 
   Widget _section(int index, Widget child) => Padding(
     key: keys[index],
-    padding: const EdgeInsets.only(top: AppTokens.sectionGap),
+    padding: EdgeInsets.only(
+      top: index == 3
+          ? 136
+          : index == 5
+          ? 80
+          : index == 8
+          ? 128
+          : AppTokens.sectionGap,
+    ),
     child: RevealOnScroll(child: child),
   );
 }
@@ -437,7 +445,7 @@ class _NavLinkState extends State<NavLink> {
       onPressed: widget.onTap,
       style: TextButton.styleFrom(
         foregroundColor: Theme.of(context).colorScheme.onSurface,
-        padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 12),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -480,26 +488,6 @@ class _CursorPainter extends CustomPainter {
       oldDelegate.position != position || oldDelegate.color != color;
 }
 
-class _ThemeToggle extends ConsumerWidget {
-  const _ThemeToggle();
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final dark = ref.watch(themeModeProvider) == ThemeMode.dark;
-    return IconButton(
-      tooltip: dark ? 'Switch to light theme' : 'Switch to dark theme',
-      onPressed: ref.read(themeModeProvider.notifier).toggle,
-      icon: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 300),
-        child: Icon(
-          dark ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
-          key: ValueKey(dark),
-          size: 19,
-        ),
-      ),
-    );
-  }
-}
-
 class _NavbarBackdrop extends ConsumerWidget {
   final bool desktop;
   const _NavbarBackdrop({required this.desktop});
@@ -516,7 +504,7 @@ class _NavbarBackdrop extends ConsumerWidget {
         ),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
-          height: 80,
+          height: AppTokens.navbarHeight,
           decoration: BoxDecoration(
             color: Theme.of(context).scaffoldBackgroundColor.withValues(
               alpha: scrolled && desktop ? .84 : .94,

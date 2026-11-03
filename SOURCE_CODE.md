@@ -116,22 +116,19 @@ linter:
 ```dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'providers/portfolio_providers.dart';
 import 'screens/portfolio_screen.dart';
 import 'theme/app_theme.dart';
 
 void main() => runApp(const ProviderScope(child: PortfolioApp()));
 
-class PortfolioApp extends ConsumerWidget {
+class PortfolioApp extends StatelessWidget {
   const PortfolioApp({super.key});
   @override
-  Widget build(BuildContext context, WidgetRef ref) => MaterialApp(
+  Widget build(BuildContext context) => MaterialApp(
     debugShowCheckedModeBanner: false,
     title: 'Hardik - Flutter Developer',
-    theme: AppTokens.theme(false),
-    darkTheme: AppTokens.theme(true),
-    themeMode: ref.watch(themeModeProvider),
-    themeAnimationDuration: const Duration(milliseconds: 450),
+    theme: AppTokens.theme(true),
+    themeMode: ThemeMode.dark,
     home: const PortfolioScreen(),
   );
 }
@@ -176,40 +173,21 @@ class Project {
 import 'package:flutter/material.dart';
 
 abstract final class AppTokens {
-  static const cyan = Color(0xFF53F5FF);
-  static const violet = Color(0xFFB69CFF);
-  static const ink = Color(0xFF080D1B);
-  static const cream = Color(0xFFF1F3FC);
+  static const cyan = Color(0xFF75B7C7);
+  static const violet = Color(0xFF75B7C7);
+  static const ink = Color(0xFF111518);
+  static const cream = Color(0xFFEFEFEB);
+  static const navbarHeight = 64.0;
   static const maxWidth = 1200.0;
   static const sectionGap = 110.0;
 
-  static BoxDecoration glass(BuildContext context, {double radius = 16}) {
+  static BoxDecoration glass(BuildContext context, {double radius = 8}) {
     final colors = Theme.of(context).colorScheme;
     final dark = colors.brightness == Brightness.dark;
     return BoxDecoration(
       borderRadius: BorderRadius.circular(radius),
-      gradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          dark
-              ? colors.onSurface.withValues(alpha: .065)
-              : Colors.white.withValues(alpha: .85),
-          dark
-              ? colors.onSurface.withValues(alpha: .025)
-              : Colors.white.withValues(alpha: .45),
-        ],
-      ),
-      border: Border.all(
-        color: colors.primary.withValues(alpha: dark ? .22 : .18),
-      ),
-      boxShadow: [
-        BoxShadow(
-          color: colors.shadow.withValues(alpha: dark ? .12 : .035),
-          blurRadius: 20,
-          offset: const Offset(0, 8),
-        ),
-      ],
+      color: dark ? const Color(0xFF171D21) : const Color(0xFFF7F6F2),
+      border: Border.all(color: colors.onSurface.withValues(alpha: .09)),
     );
   }
 
@@ -222,30 +200,30 @@ abstract final class AppTokens {
         ).copyWith(
           primary: dark ? cyan : const Color(0xFF006B79),
           onPrimary: dark ? ink : Colors.white,
-          secondary: dark ? violet : const Color(0xFF6843C8),
-          tertiary: dark ? violet : const Color(0xFF6843C8),
-          onSurface: dark ? const Color(0xFFEAF0FF) : const Color(0xFF19233C),
+          secondary: dark ? violet : const Color(0xFF346D7A),
+          tertiary: dark ? violet : const Color(0xFF346D7A),
+          onSurface: dark ? const Color(0xFFE5E9EA) : const Color(0xFF19233C),
         );
     return ThemeData(
       useMaterial3: true,
       colorScheme: colors,
       scaffoldBackgroundColor: colors.surface,
-      dividerColor: colors.primary.withValues(alpha: dark ? .2 : .14),
-      hintColor: dark ? const Color(0xFFA6B4D0) : const Color(0xFF52617D),
+      dividerColor: colors.onSurface.withValues(alpha: dark ? .1 : .14),
+      hintColor: dark ? const Color(0xFFA1ABB0) : const Color(0xFF52617D),
       textTheme: ThemeData().textTheme.apply(
         fontFamily: 'Inter',
         bodyColor: colors.onSurface,
         displayColor: colors.onSurface,
       ),
       dialogTheme: DialogThemeData(
-        backgroundColor: dark ? const Color(0xFF111A2E) : cream,
+        backgroundColor: dark ? const Color(0xFF191F23) : cream,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
           side: BorderSide(color: colors.primary.withValues(alpha: .25)),
         ),
       ),
       drawerTheme: DrawerThemeData(
-        backgroundColor: dark ? const Color(0xFF10182A) : cream,
+        backgroundColor: dark ? const Color(0xFF171D21) : cream,
       ),
       chipTheme: ChipThemeData(
         backgroundColor: colors.primary.withValues(alpha: .08),
@@ -629,14 +607,10 @@ class _RevealOnScrollState extends State<RevealOnScroll> {
         milliseconds: MediaQuery.disableAnimationsOf(context) ? 0 : 650,
       ),
       child: AnimatedSlide(
-        offset: visible ? Offset.zero : const Offset(0, .08),
-        duration: const Duration(milliseconds: 650),
+        offset: visible ? Offset.zero : const Offset(0, .035),
+        duration: const Duration(milliseconds: 420),
         curve: Curves.easeOutCubic,
-        child: AnimatedScale(
-          scale: visible ? 1 : .98,
-          duration: const Duration(milliseconds: 650),
-          child: widget.child,
-        ),
+        child: widget.child,
       ),
     ),
   );
@@ -659,7 +633,7 @@ class SectionTitle extends StatelessWidget {
         style: TextStyle(
           color: Theme.of(context).colorScheme.primary,
           fontSize: 11,
-          letterSpacing: 2,
+          letterSpacing: 1.3,
           fontWeight: FontWeight.w600,
         ),
       ),
@@ -669,7 +643,7 @@ class SectionTitle extends StatelessWidget {
         style: TextStyle(
           fontSize: MediaQuery.sizeOf(context).width < 600 ? 36 : 52,
           height: 1.1,
-          letterSpacing: -2.5,
+          letterSpacing: -1.6,
           fontWeight: FontWeight.w500,
         ),
       ),
@@ -694,8 +668,17 @@ class _HoverSurfaceState extends State<HoverSurface> {
     child: AnimatedContainer(
       duration: const Duration(milliseconds: 240),
       transform: Matrix4.identity()
-        ..translateByDouble(0, hover ? -6 : 0, 0, 1)
-        ..rotateZ(hover && widget.tilt ? -.025 : 0),
+        ..translateByDouble(
+          0,
+          hover && !MediaQuery.disableAnimationsOf(context) ? -3 : 0,
+          0,
+          1,
+        )
+        ..rotateZ(
+          hover && widget.tilt && !MediaQuery.disableAnimationsOf(context)
+              ? -.01
+              : 0,
+        ),
       child: widget.child,
     ),
   );
@@ -729,24 +712,11 @@ class _AnimatedButtonState extends State<AnimatedButton> {
       duration: const Duration(milliseconds: 220),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        gradient: widget.filled
-            ? LinearGradient(
-                colors: [
-                  Theme.of(context).colorScheme.primary,
-                  Theme.of(context).colorScheme.tertiary,
-                ],
-              )
+        color: widget.filled
+            ? Theme.of(
+                context,
+              ).colorScheme.primary.withValues(alpha: hover ? .85 : 1)
             : null,
-        boxShadow: hover && widget.filled
-            ? [
-                BoxShadow(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.primary.withValues(alpha: .3),
-                  blurRadius: 24,
-                ),
-              ]
-            : [],
       ),
       child: TextButton(
         onPressed: widget.onTap,
@@ -823,24 +793,9 @@ class _ProjectCardState extends State<ProjectCard> {
         children: [
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: AppTokens.glass(context).copyWith(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color.alphaBlend(
-                    Color(widget.project.color).withValues(alpha: .1),
-                    Theme.of(context).colorScheme.surface,
-                  ),
-                  Color.alphaBlend(
-                    Theme.of(
-                      context,
-                    ).colorScheme.tertiary.withValues(alpha: .1),
-                    Theme.of(context).colorScheme.surface,
-                  ),
-                ],
-              ),
-            ),
+            decoration: AppTokens.glass(
+              context,
+            ).copyWith(color: Theme.of(context).colorScheme.surface),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -1125,15 +1080,14 @@ class _ProjectPreviewPainter extends CustomPainter {
 ## lib/sections/hero_section.dart
 
 ```dart
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 import '../widgets/rotating_role.dart';
+import '../widgets/app_development_illustration.dart';
 import '../utils/portfolio_data.dart';
 import '../widgets/shared.dart';
 import '../theme/app_theme.dart';
 
-class HeroSection extends StatefulWidget {
+class HeroSection extends StatelessWidget {
   final VoidCallback viewWork, download;
   final ValueNotifier<double> scroll;
   const HeroSection({
@@ -1142,38 +1096,6 @@ class HeroSection extends StatefulWidget {
     required this.download,
     required this.scroll,
   });
-  @override
-  State<HeroSection> createState() => _HeroSectionState();
-}
-
-class _HeroSectionState extends State<HeroSection>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController motion = AnimationController(
-    vsync: this,
-    duration: const Duration(seconds: 14),
-  );
-  bool visible = false;
-  void syncMotion() {
-    if (!mounted) return;
-    if (!visible || MediaQuery.disableAnimationsOf(context)) {
-      motion.stop();
-    } else if (!motion.isAnimating) {
-      motion.repeat();
-    }
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    syncMotion();
-  }
-
-  @override
-  void dispose() {
-    motion.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, box) {
@@ -1212,7 +1134,7 @@ class _HeroSectionState extends State<HeroSection>
               fontSize: mobile ? (box.maxWidth < 330 ? 43 : 52) : 76,
               height: 1.02,
               fontWeight: FontWeight.w500,
-              letterSpacing: -4.5,
+              letterSpacing: -2.5,
             ),
           ),
           const SizedBox(height: 25),
@@ -1232,10 +1154,10 @@ class _HeroSectionState extends State<HeroSection>
             spacing: 12,
             runSpacing: 12,
             children: [
-              AnimatedButton(label: 'Explore my work', onTap: widget.viewWork),
+              AnimatedButton(label: 'Explore my work', onTap: viewWork),
               AnimatedButton(
                 label: 'Download CV',
-                onTap: widget.download,
+                onTap: download,
                 filled: false,
                 icon: Icons.south,
               ),
@@ -1243,246 +1165,119 @@ class _HeroSectionState extends State<HeroSection>
           ),
         ],
       );
-      final art = RepaintBoundary(
-        child: SizedBox(
-          height: mobile ? 360 : 540,
-          child: ValueListenableBuilder<double>(
-            valueListenable: widget.scroll,
-            builder: (context, offset, child) => Transform.translate(
-              offset: Offset(0, -offset * .12),
-              child: child,
-            ),
-            child: RepaintBoundary(
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  RepaintBoundary(
-                    child: CustomPaint(
-                      size: const Size(510, 510),
-                      painter: OrbitPainter(
-                        motion,
-                        Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                  ),
-                  Transform.rotate(
-                    angle: -.14,
-                    child: Container(
-                      width: 240,
-                      height: 325,
-                      decoration: BoxDecoration(
-                        color: AppTokens.ink,
-                        border: Border.all(
-                          color: AppTokens.cyan.withValues(alpha: .35),
-                        ),
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppTokens.violet.withValues(alpha: .15),
-                            blurRadius: 45,
-                            offset: const Offset(15, 25),
-                          ),
-                        ],
-                      ),
-                      padding: const EdgeInsets.all(24),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Icon(Icons.code, color: AppTokens.cyan, size: 32),
-                              Icon(
-                                Icons.north_east,
-                                color: Colors.white54,
-                                size: 20,
-                              ),
-                            ],
-                          ),
-                          const Spacer(),
-                          const Text(
-                            'Built with care.\nMade to matter.',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 28,
-                              height: 1.2,
-                              letterSpacing: -1,
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          Container(height: 1, color: Colors.white24),
-                          const SizedBox(height: 16),
-                          const Text(
-                            'DESIGN  ×  DEVELOPMENT',
-                            style: TextStyle(
-                              color: AppTokens.cyan,
-                              fontSize: 9,
-                              letterSpacing: 2,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    right: mobile ? 2 : 8,
-                    top: 80,
-                    child: Transform.rotate(
-                      angle: .12,
-                      child: _tag(
-                        '\u2726  A little detail. A lot of intention.',
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    left: 5,
-                    bottom: 80,
-                    child: _tag('\u2197  Always curious. Always building.'),
-                  ),
-                ],
-              ),
+      final notes = Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 32,
+            height: 1,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+          const SizedBox(height: 24),
+          Text(
+            'Built with care.\nMade to matter.',
+            style: const TextStyle(
+              fontSize: 26,
+              height: 1.3,
+              letterSpacing: -.5,
             ),
           ),
-        ),
+          const SizedBox(height: 20),
+          Text(
+            'DESIGN  ×  DEVELOPMENT',
+            style: TextStyle(
+              fontSize: 9,
+              letterSpacing: 1.4,
+              color: Theme.of(context).hintColor,
+            ),
+          ),
+          const SizedBox(height: 28),
+          Text(
+            '\u2726  A little detail. A lot of intention.',
+            style: TextStyle(
+              fontSize: 11,
+              height: 1.7,
+              color: Theme.of(context).hintColor,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            '\u2197  Always curious. Always building.',
+            style: TextStyle(
+              fontSize: 11,
+              height: 1.7,
+              color: Theme.of(context).hintColor,
+            ),
+          ),
+        ],
       );
-      return VisibilityDetector(
-        key: const ValueKey('hero-motion-visibility'),
-        onVisibilityChanged: (info) {
-          visible = info.visibleFraction > 0;
-          syncMotion();
-        },
-        child: Padding(
-          padding: const EdgeInsets.only(top: 65, bottom: 30),
-          child: Column(
-            children: [
-              mobile
-                  ? Column(
-                      children: [
-                        RevealOnScroll(child: copy),
-                        art,
-                      ],
-                    )
-                  : Row(
-                      children: [
-                        Expanded(flex: 11, child: RevealOnScroll(child: copy)),
-                        Expanded(flex: 10, child: art),
-                      ],
-                    ),
-              const SizedBox(height: 45),
-              Wrap(
-                alignment: WrapAlignment.spaceBetween,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                spacing: 20,
+      return Padding(
+        padding: const EdgeInsets.only(top: 72, bottom: 28),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (box.maxWidth >= 1000)
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                    'FLUTTER / FIREBASE / FLAME',
-                    style: TextStyle(
-                      fontSize: 9,
-                      letterSpacing: 1.4,
-                      color: Theme.of(context).hintColor,
-                    ),
-                  ),
-                  AnimatedBuilder(
-                    animation: motion,
-                    child: TextButton(
-                      onPressed: widget.viewWork,
-                      child: const Text(
-                        'SCROLL TO EXPLORE  \u2193',
-                        style: TextStyle(fontSize: 9, letterSpacing: 1),
-                      ),
-                    ),
-                    builder: (context, child) => Transform.translate(
-                      offset: Offset(
-                        0,
-                        math.sin(motion.value * 8 * math.pi) * 4,
-                      ),
-                      child: child,
+                  Expanded(flex: 7, child: RevealOnScroll(child: copy)),
+                  const SizedBox(width: 40),
+                  Expanded(
+                    flex: 5,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const AppDevelopmentIllustration(),
+                        const SizedBox(height: 28),
+                        notes,
+                      ],
                     ),
                   ),
                 ],
+              )
+            else ...[
+              RevealOnScroll(child: copy),
+              const SizedBox(height: 40),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 420),
+                  child: const AppDevelopmentIllustration(),
+                ),
               ),
-              const SizedBox(height: 25),
-              const Divider(),
+              const SizedBox(height: 28),
+              notes,
             ],
-          ),
+            const SizedBox(height: 48),
+            const Divider(),
+            const SizedBox(height: 18),
+            Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              spacing: 20,
+              runSpacing: 12,
+              children: [
+                Text(
+                  'FLUTTER / FIREBASE / FLAME',
+                  style: TextStyle(
+                    fontSize: 9,
+                    letterSpacing: 1.4,
+                    color: Theme.of(context).hintColor,
+                  ),
+                ),
+                TextButton(
+                  onPressed: viewWork,
+                  child: const Text(
+                    'SCROLL TO EXPLORE  \u2193',
+                    style: TextStyle(fontSize: 9, letterSpacing: 1),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       );
     },
   );
-  Widget _tag(String text) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
-    decoration: BoxDecoration(
-      color: AppTokens.cyan,
-      borderRadius: BorderRadius.circular(5),
-    ),
-    child: Text(
-      text,
-      style: const TextStyle(
-        color: AppTokens.ink,
-        fontSize: 10,
-        fontWeight: FontWeight.w500,
-      ),
-    ),
-  );
-}
-
-class OrbitPainter extends CustomPainter {
-  final Animation<double> motion;
-  final Color color;
-  OrbitPainter(this.motion, this.color) : super(repaint: motion);
-  @override
-  void paint(Canvas canvas, Size size) {
-    final phase = motion.value;
-    final center = Offset(size.width / 2, size.height / 2);
-    final r = math.min(size.width, size.height) * .44;
-    final paint = Paint()
-      ..color = color.withValues(alpha: .12)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1;
-    for (var i = 0; i < 3; i++) {
-      canvas.save();
-      canvas.translate(center.dx, center.dy);
-      canvas.rotate(i * .8 + phase * .2);
-      canvas.drawOval(
-        Rect.fromCenter(
-          center: Offset.zero,
-          width: r * 2,
-          height: r * (1 + i * .25),
-        ),
-        paint,
-      );
-      canvas.restore();
-    }
-    canvas.drawCircle(
-      center +
-          Offset(
-            math.cos(phase * 2 * math.pi) * r,
-            math.sin(phase * 2 * math.pi) * r,
-          ),
-      10,
-      Paint()..color = AppTokens.cyan,
-    );
-    canvas.drawCircle(
-      center + Offset(-r * .7, -r * .7),
-      5,
-      Paint()..color = color,
-    );
-    final star = center + Offset(r * .83, r * .7);
-    for (var i = 0; i < 8; i++) {
-      final a = i * math.pi / 4;
-      canvas.drawLine(
-        star + Offset(math.cos(a) * 8, math.sin(a) * 8),
-        star + Offset(math.cos(a) * 25, math.sin(a) * 25),
-        Paint()
-          ..color = color
-          ..strokeWidth = 2,
-      );
-    }
-  }
-
-  @override
-  bool shouldRepaint(OrbitPainter oldDelegate) =>
-      oldDelegate.motion != motion || oldDelegate.color != color;
 }
 ```
 
@@ -2167,10 +1962,10 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
     final box = keys[index].currentContext?.findRenderObject() as RenderBox?;
     if (box == null) return;
     controller.animateTo(
-      (controller.offset + box.localToGlobal(Offset.zero).dy - 105).clamp(
-        0,
-        controller.position.maxScrollExtent,
-      ),
+      (controller.offset +
+              box.localToGlobal(Offset.zero).dy -
+              (AppTokens.navbarHeight + 20))
+          .clamp(0, controller.position.maxScrollExtent),
       duration: Duration(
         milliseconds: MediaQuery.disableAnimationsOf(context) ? 1 : 850,
       ),
@@ -2255,7 +2050,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            const SizedBox(height: 75),
+                            const SizedBox(height: AppTokens.navbarHeight),
                             SizedBox(
                               key: keys[0],
                               child: HeroSection(
@@ -2412,7 +2207,8 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: padding),
                         child: SizedBox(
-                          height: 80,
+                          key: const ValueKey('portfolio-navbar'),
+                          height: AppTokens.navbarHeight,
                           child: Row(
                             children: [
                               SizedBox(
@@ -2464,7 +2260,6 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                                       )
                                       .toList(),
                                 ),
-                              const _ThemeToggle(),
                               if (desktop && box.maxWidth >= 1360) ...[
                                 const SizedBox(width: 18),
                                 AnimatedButton(
@@ -2513,7 +2308,15 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
 
   Widget _section(int index, Widget child) => Padding(
     key: keys[index],
-    padding: const EdgeInsets.only(top: AppTokens.sectionGap),
+    padding: EdgeInsets.only(
+      top: index == 3
+          ? 136
+          : index == 5
+          ? 80
+          : index == 8
+          ? 128
+          : AppTokens.sectionGap,
+    ),
     child: RevealOnScroll(child: child),
   );
 }
@@ -2542,7 +2345,7 @@ class _NavLinkState extends State<NavLink> {
       onPressed: widget.onTap,
       style: TextButton.styleFrom(
         foregroundColor: Theme.of(context).colorScheme.onSurface,
-        padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 12),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -2585,26 +2388,6 @@ class _CursorPainter extends CustomPainter {
       oldDelegate.position != position || oldDelegate.color != color;
 }
 
-class _ThemeToggle extends ConsumerWidget {
-  const _ThemeToggle();
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final dark = ref.watch(themeModeProvider) == ThemeMode.dark;
-    return IconButton(
-      tooltip: dark ? 'Switch to light theme' : 'Switch to dark theme',
-      onPressed: ref.read(themeModeProvider.notifier).toggle,
-      icon: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 300),
-        child: Icon(
-          dark ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
-          key: ValueKey(dark),
-          size: 19,
-        ),
-      ),
-    );
-  }
-}
-
 class _NavbarBackdrop extends ConsumerWidget {
   final bool desktop;
   const _NavbarBackdrop({required this.desktop});
@@ -2621,7 +2404,7 @@ class _NavbarBackdrop extends ConsumerWidget {
         ),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
-          height: 80,
+          height: AppTokens.navbarHeight,
           decoration: BoxDecoration(
             color: Theme.of(context).scaffoldBackgroundColor.withValues(
               alpha: scrolled && desktop ? .84 : .94,
@@ -2652,15 +2435,15 @@ class _NavbarBackdrop extends ConsumerWidget {
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="Hardik, Flutter developer in Sadhaura, India. Explore cross-platform applications, Flutter and Flame games, experience, and contact details.">
-  <meta name="theme-color" content="#080D1B">
+  <meta name="theme-color" content="#111518">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hardik — Flutter Developer</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="manifest" href="manifest.json">
   <style>
-    body { margin: 0; background: #080d1b; }
-    #intro { position: fixed; inset: 0; display: grid; place-items: center; font: 700 54px system-ui; color: #eaf0ff; background: #080d1b; transition: opacity .45s; z-index: 999; }
-    #intro span { border-bottom: 5px solid #53f5ff; animation: breathe 1.2s ease-in-out infinite alternate; }
+    body { margin: 0; background: #111518; }
+    #intro { position: fixed; inset: 0; display: grid; place-items: center; font: 700 54px system-ui; color: #e5e9ea; background: #111518; transition: opacity .45s; z-index: 999; }
+    #intro span { border-bottom: 5px solid #75b7c7; animation: breathe 1.2s ease-in-out infinite alternate; }
     @keyframes breathe { to { opacity: .35; transform: translateY(-5px); } }
     @media (prefers-reduced-motion: reduce) { #intro span { animation: none; } }
   </style>
@@ -2760,10 +2543,16 @@ void main() {
       await tester.pump(const Duration(milliseconds: 300));
       expect(find.text('Please enter your name.'), findsOneWidget);
       expect(find.text('Enter a valid email address.'), findsOneWidget);
-      await tester.tap(find.byTooltip('Switch to light theme'));
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 500));
-      expect(find.byTooltip('Switch to dark theme'), findsOneWidget);
+      expect(find.byTooltip('Switch to light theme'), findsNothing);
+      expect(find.byTooltip('Switch to dark theme'), findsNothing);
+      expect(
+        tester.getSize(find.byKey(const ValueKey('portfolio-navbar'))).height,
+        64,
+      );
+      expect(
+        Theme.of(tester.element(find.byType(ContactSection))).brightness,
+        Brightness.dark,
+      );
       expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox.shrink());
       await tester.pump();
@@ -2791,7 +2580,7 @@ class AnimatedLogo extends StatefulWidget {
     super.key,
     required this.onTap,
     this.name = 'Hardik',
-    this.style = LogoStyle.neon,
+    this.style = LogoStyle.soft,
   });
 
   @override
@@ -2810,7 +2599,7 @@ class _AnimatedLogoState extends State<AnimatedLogo> {
     final duration = Duration(milliseconds: reduced ? 0 : 260);
     final gradient = LinearGradient(colors: [colors.primary, colors.tertiary]);
     final type = GoogleFonts.sora(
-      fontSize: 32,
+      fontSize: 28,
       fontWeight: FontWeight.w800,
       letterSpacing: -1.5,
       height: 1,
@@ -2895,15 +2684,6 @@ class _AnimatedLogoState extends State<AnimatedLogo> {
                     ),
                   ],
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: colors.primary.withValues(
-                      alpha: hovered ? .25 : .08,
-                    ),
-                    blurRadius: hovered ? 24 : 12,
-                    spreadRadius: hovered && neon ? 2 : 0,
-                  ),
-                ],
               ),
               child: Material(
                 color: neon
@@ -2920,8 +2700,8 @@ class _AnimatedLogoState extends State<AnimatedLogo> {
                   focusColor: colors.primary.withValues(alpha: .12),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 10,
+                      horizontal: 10,
+                      vertical: 8,
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -3307,17 +3087,6 @@ class ProjectDetails extends StatelessWidget {
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final themeModeProvider = NotifierProvider<ThemeController, ThemeMode>(
-  ThemeController.new,
-);
-
-class ThemeController extends Notifier<ThemeMode> {
-  @override
-  ThemeMode build() => ThemeMode.dark;
-  void toggle() =>
-      state = state == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
-}
-
 final caseStudyPageProvider =
     NotifierProvider.autoDispose<CaseStudyPageController, int>(
       CaseStudyPageController.new,
@@ -3434,14 +3203,14 @@ class _AmbientPainter extends CustomPainter {
         Paint()
           ..shader = RadialGradient(
             colors: [
-              light.color.withValues(alpha: dark ? .12 : .065),
+              light.color.withValues(alpha: dark ? .025 : .025),
               light.color.withValues(alpha: 0),
             ],
           ).createShader(Rect.fromCircle(center: light.point, radius: radius)),
       );
     }
     final paint = Paint()
-      ..color = grid.withValues(alpha: dark ? .025 : .035)
+      ..color = grid.withValues(alpha: 0.0)
       ..strokeWidth = .5;
     for (double x = 0; x < size.width; x += 64) {
       canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
@@ -3574,7 +3343,6 @@ import '../utils/download.dart';
 import '../utils/portfolio_data.dart';
 import '../widgets/scroll_driven_case_studies.dart';
 import '../widgets/shared.dart';
-import '../widgets/skill_icon.dart';
 
 class ExpertiseSection extends StatelessWidget {
   const ExpertiseSection({super.key});
@@ -3593,50 +3361,54 @@ class ExpertiseSection extends StatelessWidget {
         'Three areas where my application work and game engineering come together.',
       ),
       const SizedBox(height: 32),
-      _TileGrid(
-        maxColumns: 3,
-        children: PortfolioData.capabilities
-            .map(
-              (item) => Container(
-                padding: const EdgeInsets.all(26),
-                decoration: AppTokens.glass(context),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.primary.withValues(alpha: .08),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: SkillIcon(skill: item.icon),
-                    ),
-                    const SizedBox(height: 26),
-                    Text(
-                      item.title,
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: -.8,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    _muted(context, item.description),
-                    const SizedBox(height: 24),
-                    Wrap(
-                      spacing: 7,
-                      runSpacing: 8,
-                      children: item.tools
-                          .map((tool) => _tag(context, tool))
-                          .toList(),
-                    ),
-                  ],
+      ...PortfolioData.capabilities.map(
+        (item) => Container(
+          padding: const EdgeInsets.symmetric(vertical: 28),
+          decoration: BoxDecoration(
+            border: Border(
+              top: BorderSide(color: Theme.of(context).dividerColor),
+            ),
+          ),
+          child: LayoutBuilder(
+            builder: (context, box) {
+              final heading = Text(
+                item.title,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: -.6,
                 ),
-              ),
-            )
-            .toList(),
+              );
+              final detail = Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _muted(context, item.description),
+                  const SizedBox(height: 18),
+                  Wrap(
+                    spacing: 7,
+                    runSpacing: 8,
+                    children: item.tools
+                        .map((tool) => _tag(context, tool))
+                        .toList(),
+                  ),
+                ],
+              );
+              return box.maxWidth < 650
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [heading, const SizedBox(height: 18), detail],
+                    )
+                  : Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(flex: 4, child: heading),
+                        const SizedBox(width: 44),
+                        Expanded(flex: 6, child: detail),
+                      ],
+                    );
+            },
+          ),
+        ),
       ),
     ],
   );
@@ -3792,30 +3564,6 @@ Widget _muted(BuildContext context, String text) => Text(
     color: Theme.of(context).hintColor,
   ),
 );
-
-class _TileGrid extends StatelessWidget {
-  final int maxColumns;
-  final List<Widget> children;
-  const _TileGrid({required this.maxColumns, required this.children});
-  @override
-  Widget build(BuildContext context) => LayoutBuilder(
-    builder: (context, box) {
-      final count = (box.maxWidth / 260).floor().clamp(1, maxColumns);
-      final width = (box.maxWidth - (count - 1) * 20) / count;
-      return Wrap(
-        spacing: 20,
-        runSpacing: 20,
-        children: List.generate(
-          children.length,
-          (i) => SizedBox(
-            width: width,
-            child: RevealOnScroll(delay: i * 70, child: children[i]),
-          ),
-        ),
-      );
-    },
-  );
-}
 
 Widget _tag(BuildContext context, String text) => Container(
   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
@@ -4446,12 +4194,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/portfolio_providers.dart';
 import '../utils/portfolio_data.dart';
+import '../theme/app_theme.dart';
 import 'project_story_gallery.dart';
 
 /// A document-scroll pin, not a wheel interceptor. Native vertical gestures
 /// advance the stories and naturally leave the section after the final project.
 class ScrollDrivenCaseStudies extends ConsumerStatefulWidget {
-  static const stickyTop = 96.0;
+  static const stickyTop = AppTokens.navbarHeight + 16;
   const ScrollDrivenCaseStudies({super.key});
   @override
   ConsumerState<ScrollDrivenCaseStudies> createState() =>
@@ -4630,5 +4379,233 @@ class _GalleryIntro extends StatelessWidget {
       ],
     );
   }
+}
+```
+
+## lib/widgets/app_development_illustration.dart
+
+```dart
+import 'package:flutter/material.dart';
+
+/// A lightweight drawing of code becoming a mobile interface, not a project preview.
+class AppDevelopmentIllustration extends StatelessWidget {
+  const AppDevelopmentIllustration({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    return Semantics(
+      image: true,
+      label:
+          'App development illustration: Dart code connected to a mobile interface wireframe',
+      child: RepaintBoundary(
+        child: AspectRatio(
+          aspectRatio: 420 / 380,
+          child: CustomPaint(
+            painter: _DevelopmentPainter(
+              foreground: colors.onSurface,
+              background: colors.surface,
+              accent: colors.primary,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _DevelopmentPainter extends CustomPainter {
+  final Color foreground, background, accent;
+  const _DevelopmentPainter({
+    required this.foreground,
+    required this.background,
+    required this.accent,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.save();
+    canvas.scale(size.width / 420, size.height / 380);
+    final line = foreground.withValues(alpha: .18);
+    final faint = foreground.withValues(alpha: .07);
+    final panel = Color.alphaBlend(
+      foreground.withValues(alpha: .025),
+      background,
+    );
+
+    void rect(Rect bounds, double radius, {Color? fill, Color? stroke}) {
+      final shape = RRect.fromRectAndRadius(bounds, Radius.circular(radius));
+      if (fill != null) canvas.drawRRect(shape, Paint()..color = fill);
+      if (stroke != null) {
+        canvas.drawRRect(
+          shape,
+          Paint()
+            ..color = stroke
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 1,
+        );
+      }
+    }
+
+    void rule(Offset start, Offset end, Color color, [double width = 1]) =>
+        canvas.drawLine(
+          start,
+          end,
+          Paint()
+            ..color = color
+            ..strokeWidth = width
+            ..strokeCap = StrokeCap.round,
+        );
+    void text(
+      String value,
+      Offset at,
+      double fontSize,
+      Color color, {
+      bool mono = false,
+    }) {
+      final painter = TextPainter(
+        text: TextSpan(
+          text: value,
+          style: TextStyle(
+            color: color,
+            fontSize: fontSize,
+            fontFamily: mono ? 'monospace' : 'Inter',
+            height: 1.5,
+          ),
+        ),
+        textDirection: TextDirection.ltr,
+      )..layout();
+      painter.paint(canvas, at);
+      painter.dispose();
+    }
+
+    // Fine construction marks give the scene the feel of a UI working drawing.
+    rule(const Offset(12, 36), const Offset(60, 36), line);
+    rule(const Offset(12, 28), const Offset(12, 44), line);
+    text(
+      'CODE TO INTERFACE',
+      const Offset(72, 28),
+      9,
+      foreground.withValues(alpha: .5),
+    );
+
+    // Phone outline with a neutral, abstract interface.
+    rect(const Rect.fromLTWH(236, 59, 164, 300), 25, fill: panel, stroke: line);
+    rect(
+      const Rect.fromLTWH(246, 69, 144, 280),
+      18,
+      fill: background,
+      stroke: faint,
+    );
+    rect(
+      const Rect.fromLTWH(293, 78, 50, 5),
+      3,
+      fill: foreground.withValues(alpha: .22),
+    );
+    rule(const Offset(263, 110), const Offset(283, 110), accent, 3);
+    canvas.drawCircle(const Offset(370, 110), 7, Paint()..color = faint);
+    rect(
+      const Rect.fromLTWH(261, 135, 114, 64),
+      8,
+      fill: accent.withValues(alpha: .1),
+      stroke: accent.withValues(alpha: .28),
+    );
+    rule(
+      const Offset(273, 153),
+      const Offset(310, 153),
+      accent.withValues(alpha: .65),
+      4,
+    );
+    rule(const Offset(273, 168), const Offset(356, 168), line, 3);
+    rule(const Offset(273, 181), const Offset(339, 181), line, 3);
+    for (var i = 0; i < 3; i++) {
+      final y = 217.0 + i * 31;
+      rect(Rect.fromLTWH(261, y, 18, 18), 4, fill: faint);
+      rule(Offset(290, y + 5), Offset(365, y + 5), line, 3);
+      rule(Offset(290, y + 14), Offset(338, y + 14), faint, 3);
+    }
+    rect(const Rect.fromLTWH(278, 316, 80, 4), 2, fill: line);
+    rule(const Offset(300, 339), const Offset(336, 339), line, 3);
+
+    // Editor overlaps the phone slightly; the snippet is generic Flutter code.
+    rect(const Rect.fromLTWH(9, 102, 248, 190), 8, fill: panel, stroke: line);
+    rule(const Offset(9, 136), const Offset(257, 136), line);
+    for (var i = 0; i < 3; i++) {
+      canvas.drawCircle(
+        Offset(25.0 + i * 11, 119),
+        2,
+        Paint()..color = foreground.withValues(alpha: .28),
+      );
+    }
+    text(
+      'main.dart',
+      const Offset(70, 110),
+      10,
+      foreground.withValues(alpha: .6),
+      mono: true,
+    );
+    const code = [
+      'Widget build(context) {',
+      '  return const MaterialApp(',
+      '    home: Scaffold(',
+      '      body: SizedBox(),',
+      '    ),',
+      '  );',
+      '}',
+    ];
+    for (var i = 0; i < code.length; i++) {
+      final y = 151.0 + i * 17;
+      text(
+        '${i + 1}',
+        Offset(22, y),
+        9,
+        foreground.withValues(alpha: .24),
+        mono: true,
+      );
+      text(
+        code[i],
+        Offset(41, y),
+        10,
+        i == 1 || i == 3 ? accent : foreground.withValues(alpha: .65),
+        mono: true,
+      );
+    }
+
+    final connector = Path()
+      ..moveTo(92, 292)
+      ..lineTo(92, 327)
+      ..quadraticBezierTo(92, 333, 98, 333)
+      ..lineTo(226, 333);
+    canvas.drawPath(
+      connector,
+      Paint()
+        ..color = accent.withValues(alpha: .4)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1,
+    );
+    rule(
+      const Offset(220, 329),
+      const Offset(226, 333),
+      accent.withValues(alpha: .5),
+    );
+    rule(
+      const Offset(220, 337),
+      const Offset(226, 333),
+      accent.withValues(alpha: .5),
+    );
+    text(
+      'BUILD / REFINE / REPEAT',
+      const Offset(26, 355),
+      8,
+      foreground.withValues(alpha: .4),
+    );
+    canvas.restore();
+  }
+
+  @override
+  bool shouldRepaint(_DevelopmentPainter oldDelegate) =>
+      foreground != oldDelegate.foreground ||
+      background != oldDelegate.background ||
+      accent != oldDelegate.accent;
 }
 ```

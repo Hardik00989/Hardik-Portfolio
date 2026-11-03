@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/portfolio_providers.dart';
 import '../utils/portfolio_data.dart';
+import '../theme/app_theme.dart';
 import 'project_story_gallery.dart';
 
 /// A document-scroll pin, not a wheel interceptor. Native vertical gestures
 /// advance the stories and naturally leave the section after the final project.
 class ScrollDrivenCaseStudies extends ConsumerStatefulWidget {
-  static const stickyTop = 96.0;
+  static const stickyTop = AppTokens.navbarHeight + 16;
   const ScrollDrivenCaseStudies({super.key});
   @override
   ConsumerState<ScrollDrivenCaseStudies> createState() =>

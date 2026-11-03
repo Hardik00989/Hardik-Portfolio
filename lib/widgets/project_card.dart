@@ -32,24 +32,9 @@ class _ProjectCardState extends State<ProjectCard> {
         children: [
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: AppTokens.glass(context).copyWith(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color.alphaBlend(
-                    Color(widget.project.color).withValues(alpha: .1),
-                    Theme.of(context).colorScheme.surface,
-                  ),
-                  Color.alphaBlend(
-                    Theme.of(
-                      context,
-                    ).colorScheme.tertiary.withValues(alpha: .1),
-                    Theme.of(context).colorScheme.surface,
-                  ),
-                ],
-              ),
-            ),
+            decoration: AppTokens.glass(
+              context,
+            ).copyWith(color: Theme.of(context).colorScheme.surface),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [

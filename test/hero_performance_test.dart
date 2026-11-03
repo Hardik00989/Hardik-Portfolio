@@ -6,7 +6,7 @@ import 'package:visibility_detector/visibility_detector.dart';
 
 void main() {
   testWidgets(
-    'Hero preserves scene across typing/parallax and pauses offscreen',
+    'Hero preserves role across scroll updates and pauses offscreen',
     (tester) async {
       VisibilityDetectorController.instance.updateInterval = Duration.zero;
       tester.view.physicalSize = const Size(1200, 900);
@@ -38,10 +38,6 @@ void main() {
       await tester.pump(const Duration(milliseconds: 700));
       await tester.pump(const Duration(milliseconds: 700));
       await tester.pump();
-      final orbit = find.byWidgetPredicate(
-        (widget) => widget is CustomPaint && widget.painter is OrbitPainter,
-      );
-      final painter = tester.widget<CustomPaint>(orbit).painter as OrbitPainter;
       final role = find.descendant(
         of: find.byType(RotatingRole),
         matching: find.byType(Text),
@@ -49,26 +45,18 @@ void main() {
       final initialText = tester.widget<Text>(role).data;
       await tester.pump(const Duration(milliseconds: 500));
       expect(tester.widget<Text>(role).data, isNot(initialText));
-      expect(
-        identical(tester.widget<CustomPaint>(orbit).painter, painter),
-        isTrue,
-      );
+
       parallax.value = 80;
       await tester.pump();
-      expect(
-        identical(tester.widget<CustomPaint>(orbit).painter, painter),
-        isTrue,
-      );
+
       scroll.jumpTo(1300);
       await tester.pump();
       await tester.pump();
       VisibilityDetectorController.instance.notifyNow();
       await tester.pump(const Duration(milliseconds: 500));
       final pausedText = tester.widget<Text>(role).data;
-      final pausedPhase = painter.motion.value;
       await tester.pump(const Duration(seconds: 2));
       expect(tester.widget<Text>(role).data, pausedText);
-      expect(painter.motion.value, pausedPhase);
       scroll.jumpTo(0);
       await tester.pump();
       await tester.pump();

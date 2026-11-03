@@ -38,14 +38,14 @@ class _AmbientPainter extends CustomPainter {
         Paint()
           ..shader = RadialGradient(
             colors: [
-              light.color.withValues(alpha: dark ? .12 : .065),
+              light.color.withValues(alpha: dark ? .025 : .025),
               light.color.withValues(alpha: 0),
             ],
           ).createShader(Rect.fromCircle(center: light.point, radius: radius)),
       );
     }
     final paint = Paint()
-      ..color = grid.withValues(alpha: dark ? .025 : .035)
+      ..color = grid.withValues(alpha: 0.0)
       ..strokeWidth = .5;
     for (double x = 0; x < size.width; x += 64) {
       canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);

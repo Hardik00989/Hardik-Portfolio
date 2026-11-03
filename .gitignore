@@ -46,3 +46,32 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Local configuration and environment values
+.env
+.env.*
+!.env.example
+!.env.sample
+/.vscode/
+/android/local.properties
+/android/key.properties
+
+# Private credentials and signing keys
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+*service-account*.json
+*service_account*.json
+
+# Local hosting and SDK caches
+/.firebase/
+/.fvm/
+/.flutter-sdk/
+
+# Local-only workspace notes (keep the actual application source tracked)
+/AGENTS.md
+/SOURCE_CODE.md
+/LOGO_GUIDE.md
