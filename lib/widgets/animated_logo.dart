@@ -14,7 +14,7 @@ class AnimatedLogo extends StatefulWidget {
     super.key,
     required this.onTap,
     this.name = 'Hardik',
-    this.style = LogoStyle.neon,
+    this.style = LogoStyle.soft,
   });
 
   @override
@@ -33,7 +33,7 @@ class _AnimatedLogoState extends State<AnimatedLogo> {
     final duration = Duration(milliseconds: reduced ? 0 : 260);
     final gradient = LinearGradient(colors: [colors.primary, colors.tertiary]);
     final type = GoogleFonts.sora(
-      fontSize: 32,
+      fontSize: 28,
       fontWeight: FontWeight.w800,
       letterSpacing: -1.5,
       height: 1,
@@ -118,15 +118,6 @@ class _AnimatedLogoState extends State<AnimatedLogo> {
                     ),
                   ],
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: colors.primary.withValues(
-                      alpha: hovered ? .25 : .08,
-                    ),
-                    blurRadius: hovered ? 24 : 12,
-                    spreadRadius: hovered && neon ? 2 : 0,
-                  ),
-                ],
               ),
               child: Material(
                 color: neon
@@ -143,8 +134,8 @@ class _AnimatedLogoState extends State<AnimatedLogo> {
                   focusColor: colors.primary.withValues(alpha: .12),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 10,
+                      horizontal: 10,
+                      vertical: 8,
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,

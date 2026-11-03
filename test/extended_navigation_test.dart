@@ -30,13 +30,13 @@ void main() {
       tester.element(find.byType(PortfolioScreen)),
       listen: false,
     );
-    expect(container.read(navigationProvider).activeSection, 8);
+    expect(container.read(navigationProvider).activeSection, 7);
     expect(tester.takeException(), isNull);
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump();
   });
 
-  testWidgets('All ten sections are reachable in a short mobile drawer', (
+  testWidgets('All nine sections are reachable in a short mobile drawer', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(375, 600);
@@ -58,7 +58,7 @@ void main() {
       tester.element(find.byType(PortfolioScreen)),
       listen: false,
     );
-    expect(container.read(navigationProvider).activeSection, 9);
+    expect(container.read(navigationProvider).activeSection, 8);
     expect(tester.takeException(), isNull);
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump();

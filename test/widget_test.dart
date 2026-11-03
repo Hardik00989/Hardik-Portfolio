@@ -54,10 +54,16 @@ void main() {
       await tester.pump(const Duration(milliseconds: 300));
       expect(find.text('Please enter your name.'), findsOneWidget);
       expect(find.text('Enter a valid email address.'), findsOneWidget);
-      await tester.tap(find.byTooltip('Switch to light theme'));
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 500));
-      expect(find.byTooltip('Switch to dark theme'), findsOneWidget);
+      expect(find.byTooltip('Switch to light theme'), findsNothing);
+      expect(find.byTooltip('Switch to dark theme'), findsNothing);
+      expect(
+        tester.getSize(find.byKey(const ValueKey('portfolio-navbar'))).height,
+        64,
+      );
+      expect(
+        Theme.of(tester.element(find.byType(ContactSection))).brightness,
+        Brightness.dark,
+      );
       expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox.shrink());
       await tester.pump();

@@ -9,18 +9,6 @@ import 'package:portfolio/sections/hero_section.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 void main() {
-  test('Theme toggles are isolated to their provider scope', () {
-    final first = ProviderContainer();
-    final second = ProviderContainer();
-    addTearDown(first.dispose);
-    addTearDown(second.dispose);
-    first.read(themeModeProvider.notifier).toggle();
-    expect(first.read(themeModeProvider), ThemeMode.light);
-    expect(second.read(themeModeProvider), ThemeMode.dark);
-    first.read(themeModeProvider.notifier).toggle();
-    expect(first.read(themeModeProvider), ThemeMode.dark);
-  });
-
   test('Navbar selectors ignore unrelated section changes', () {
     final container = ProviderContainer();
     addTearDown(container.dispose);

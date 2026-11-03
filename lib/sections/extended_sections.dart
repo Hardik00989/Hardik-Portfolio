@@ -5,7 +5,6 @@ import '../utils/download.dart';
 import '../utils/portfolio_data.dart';
 import '../widgets/scroll_driven_case_studies.dart';
 import '../widgets/shared.dart';
-import '../widgets/skill_icon.dart';
 
 class ExpertiseSection extends StatelessWidget {
   const ExpertiseSection({super.key});
@@ -24,50 +23,54 @@ class ExpertiseSection extends StatelessWidget {
         'Three areas where my application work and game engineering come together.',
       ),
       const SizedBox(height: 32),
-      _TileGrid(
-        maxColumns: 3,
-        children: PortfolioData.capabilities
-            .map(
-              (item) => Container(
-                padding: const EdgeInsets.all(26),
-                decoration: AppTokens.glass(context),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.primary.withValues(alpha: .08),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: SkillIcon(skill: item.icon),
-                    ),
-                    const SizedBox(height: 26),
-                    Text(
-                      item.title,
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: -.8,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    _muted(context, item.description),
-                    const SizedBox(height: 24),
-                    Wrap(
-                      spacing: 7,
-                      runSpacing: 8,
-                      children: item.tools
-                          .map((tool) => _tag(context, tool))
-                          .toList(),
-                    ),
-                  ],
+      ...PortfolioData.capabilities.map(
+        (item) => Container(
+          padding: const EdgeInsets.symmetric(vertical: 28),
+          decoration: BoxDecoration(
+            border: Border(
+              top: BorderSide(color: Theme.of(context).dividerColor),
+            ),
+          ),
+          child: LayoutBuilder(
+            builder: (context, box) {
+              final heading = Text(
+                item.title,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: -.6,
                 ),
-              ),
-            )
-            .toList(),
+              );
+              final detail = Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _muted(context, item.description),
+                  const SizedBox(height: 18),
+                  Wrap(
+                    spacing: 7,
+                    runSpacing: 8,
+                    children: item.tools
+                        .map((tool) => _tag(context, tool))
+                        .toList(),
+                  ),
+                ],
+              );
+              return box.maxWidth < 650
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [heading, const SizedBox(height: 18), detail],
+                    )
+                  : Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(flex: 4, child: heading),
+                        const SizedBox(width: 44),
+                        Expanded(flex: 6, child: detail),
+                      ],
+                    );
+            },
+          ),
+        ),
       ),
     ],
   );
@@ -104,64 +107,6 @@ class _StoryPoint extends StatelessWidget {
   );
 }
 
-class HighlightsSection extends StatelessWidget {
-  const HighlightsSection({super.key});
-  @override
-  Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      const SectionTitle(
-        number: '07',
-        label: 'ENGINEERING HIGHLIGHTS',
-        title: 'Small details.\nSubstantial systems.',
-      ),
-      const SizedBox(height: 20),
-      _muted(
-        context,
-        'Selected implementation details from my projects and résumé.',
-      ),
-      const SizedBox(height: 32),
-      _TileGrid(
-        maxColumns: 4,
-        children: PortfolioData.engineeringHighlights
-            .map(
-              (item) => Container(
-                padding: const EdgeInsets.all(24),
-                decoration: AppTokens.glass(context),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      item.value,
-                      style: TextStyle(
-                        fontSize: 46,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: -2,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      item.label,
-                      style: const TextStyle(
-                        fontSize: 19,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    _muted(context, item.detail),
-                    const SizedBox(height: 20),
-                    _tag(context, item.project),
-                  ],
-                ),
-              ),
-            )
-            .toList(),
-      ),
-    ],
-  );
-}
-
 class ResumeSection extends StatelessWidget {
   const ResumeSection({super.key});
   @override
@@ -169,7 +114,7 @@ class ResumeSection extends StatelessWidget {
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       const SectionTitle(
-        number: '08',
+        number: '07',
         label: 'TAKE A CLOSER LOOK',
         title: 'The full picture.\nReady to download.',
       ),
@@ -270,30 +215,6 @@ class ResumeSection extends StatelessWidget {
         ),
       ),
     ],
-  );
-}
-
-class _TileGrid extends StatelessWidget {
-  final int maxColumns;
-  final List<Widget> children;
-  const _TileGrid({required this.maxColumns, required this.children});
-  @override
-  Widget build(BuildContext context) => LayoutBuilder(
-    builder: (context, box) {
-      final count = (box.maxWidth / 260).floor().clamp(1, maxColumns);
-      final width = (box.maxWidth - (count - 1) * 20) / count;
-      return Wrap(
-        spacing: 20,
-        runSpacing: 20,
-        children: List.generate(
-          children.length,
-          (i) => SizedBox(
-            width: width,
-            child: RevealOnScroll(delay: i * 70, child: children[i]),
-          ),
-        ),
-      );
-    },
   );
 }
 

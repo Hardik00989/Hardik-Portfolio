@@ -37,14 +37,10 @@ class _RevealOnScrollState extends State<RevealOnScroll> {
         milliseconds: MediaQuery.disableAnimationsOf(context) ? 0 : 650,
       ),
       child: AnimatedSlide(
-        offset: visible ? Offset.zero : const Offset(0, .08),
-        duration: const Duration(milliseconds: 650),
+        offset: visible ? Offset.zero : const Offset(0, .035),
+        duration: const Duration(milliseconds: 420),
         curve: Curves.easeOutCubic,
-        child: AnimatedScale(
-          scale: visible ? 1 : .98,
-          duration: const Duration(milliseconds: 650),
-          child: widget.child,
-        ),
+        child: widget.child,
       ),
     ),
   );
@@ -67,7 +63,7 @@ class SectionTitle extends StatelessWidget {
         style: TextStyle(
           color: Theme.of(context).colorScheme.primary,
           fontSize: 11,
-          letterSpacing: 2,
+          letterSpacing: 1.3,
           fontWeight: FontWeight.w600,
         ),
       ),
@@ -77,7 +73,7 @@ class SectionTitle extends StatelessWidget {
         style: TextStyle(
           fontSize: MediaQuery.sizeOf(context).width < 600 ? 36 : 52,
           height: 1.1,
-          letterSpacing: -2.5,
+          letterSpacing: -1.6,
           fontWeight: FontWeight.w500,
         ),
       ),
@@ -102,8 +98,17 @@ class _HoverSurfaceState extends State<HoverSurface> {
     child: AnimatedContainer(
       duration: const Duration(milliseconds: 240),
       transform: Matrix4.identity()
-        ..translateByDouble(0, hover ? -6 : 0, 0, 1)
-        ..rotateZ(hover && widget.tilt ? -.025 : 0),
+        ..translateByDouble(
+          0,
+          hover && !MediaQuery.disableAnimationsOf(context) ? -3 : 0,
+          0,
+          1,
+        )
+        ..rotateZ(
+          hover && widget.tilt && !MediaQuery.disableAnimationsOf(context)
+              ? -.01
+              : 0,
+        ),
       child: widget.child,
     ),
   );
@@ -137,24 +142,11 @@ class _AnimatedButtonState extends State<AnimatedButton> {
       duration: const Duration(milliseconds: 220),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        gradient: widget.filled
-            ? LinearGradient(
-                colors: [
-                  Theme.of(context).colorScheme.primary,
-                  Theme.of(context).colorScheme.tertiary,
-                ],
-              )
+        color: widget.filled
+            ? Theme.of(
+                context,
+              ).colorScheme.primary.withValues(alpha: hover ? .85 : 1)
             : null,
-        boxShadow: hover && widget.filled
-            ? [
-                BoxShadow(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.primary.withValues(alpha: .3),
-                  blurRadius: 24,
-                ),
-              ]
-            : [],
       ),
       child: TextButton(
         onPressed: widget.onTap,

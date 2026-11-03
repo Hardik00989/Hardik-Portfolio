@@ -35,7 +35,7 @@ portfolio/
 └── README.md
 ```
 
-Complete runnable code is in the files above. SOURCE_CODE.md also presents the folder structure first and the full text of every application/configuration file afterward. Existing generated native platform folders are retained.
+Complete runnable code is in the application files above. Existing generated native platform folders are retained.
 
 ## Run
 
@@ -53,7 +53,7 @@ flutter run -d chrome
 - Your supplied portrait is bundled at `assets/images/hardik.jpg` and displayed in the About section with a responsive cover crop. Replace this asset to change the photo.
 - The Download CV button downloads the supplied `web/Hardik_resume.pdf`. The shared filename is configured in `PortfolioData.cvFile`.
 - Update titles in `main.dart`, `web/index.html`, `web/manifest.json`, the favicon and intro initials.
-- Change colors/spacing in `lib/theme/app_theme.dart`. Dark background #080D1B, cyan #53F5FF, violet #B69CFF; locally bundled Inter with its OFL license.
+- Change colors/spacing in `lib/theme/app_theme.dart`. Dark background #111518 and muted blue #75B7C7; locally bundled Inter with its OFL license.
 
 Shared application state uses `flutter_riverpod` with `ProviderScope`, `NotifierProvider`, and selective consumers; no account, backend, API keys or external image assets are required. The contact form validates locally and opens an email draft; visitors must send it in their email app. It does not claim to deliver mail from a server.
 
@@ -71,7 +71,7 @@ Current Flutter builds use CanvasKit by default; the old `--web-renderer canvask
 
 The output is `build/web/`. To bundle engine resources for hosting without a CDN, add `--no-web-resources-cdn`. Serve the output over HTTP, rather than opening index.html directly.
 
-Widget tests cover overflow, mobile drawer/desktop navigation, theme switching, and invalid form submission across responsive widths. A browser performance/profile review is still recommended before publishing your final content.
+Widget tests cover overflow, mobile drawer/desktop navigation, the fixed dark theme and compact navbar, and invalid form submission across responsive widths. A browser performance/profile review is still recommended before publishing your final content.
 
 ## Firebase Hosting
 
@@ -105,7 +105,7 @@ In GitHub repository Settings → Pages, select deployment from the `gh-pages` b
 
 ## Animated navbar logo
 
-The navbar uses `AnimatedLogo` from `lib/widgets/animated_logo.dart`. Read [LOGO_GUIDE.md](LOGO_GUIDE.md) for the full source and both variations. The outlined `neon` style is active; set `style: LogoStyle.soft` to compare the quieter version. Colors come from the theme. Sora ExtraBold is loaded through google_fonts from the locally bundled font, with its license at `assets/fonts/Sora-OFL.txt`.
+The navbar uses `AnimatedLogo` from `lib/widgets/animated_logo.dart`. The `soft` style is active. Both variations use the theme accent without glow shadows. Colors come from the theme. Sora ExtraBold is loaded through google_fonts from the locally bundled font, with its license at `assets/fonts/Sora-OFL.txt`.
 
 
 ## Animation performance
@@ -124,22 +124,21 @@ When adding new assets or changing their declarations, stop and rerun `flutter r
 
 ## Information structure
 
-The reference https://kulbir-dhiman.vercel.app/ informed the information hierarchy: grouped skill categories, richer project stories, and visible resume access. The portfolio retains its own neon glass identity and uses Hardik's supplied resume and project links for personal content.
+The reference https://kulbir-dhiman.vercel.app/ informed the information hierarchy: grouped skill categories, richer project stories, and visible resume access. The portfolio retains its own visual identity and uses Hardik's supplied resume and project links for personal content.
 
 Skills are organized in `PortfolioData.skillGroups`. Work experience and education have separate responsive columns. Project cards expose an Explore project details action, opening `ProjectDetails` with contributions, technologies, and expandable technical notes. About includes a View resume action, alongside the existing Download CV button in the hero. Contact offers email, phone, and LinkedIn actions.
 
 
 ## Riverpod state management
 
-`lib/providers/portfolio_providers.dart` contains theme and navigation notifiers, an auto-disposed viewport resource provider, and an auto-disposed contact submission notifier. The app entry point wraps `PortfolioApp` in `ProviderScope`. Theme toggling no longer uses app-level setState, and section/blur changes rebuild only their selected navbar consumers. Riverpod owns and disposes the scroll controller and pointer/parallax listenables. Hover, text-editing, visibility, and animation lifecycle state stays local to its widget; frequent paint updates do not propagate through global state.
+`lib/providers/portfolio_providers.dart` contains navigation notifiers, an auto-disposed viewport resource provider, and an auto-disposed contact submission notifier. The app entry point wraps `PortfolioApp` in `ProviderScope`. The app uses a fixed dark theme; section/blur changes rebuild only their selected navbar consumers. Riverpod owns and disposes the scroll controller and pointer/parallax listenables. Hover, text-editing, visibility, and animation lifecycle state stays local to its widget; frequent paint updates do not propagate through global state.
 
 The contact notifier prevents duplicate submissions and safely resets pending state after asynchronous completion, errors, or disposal. The form still opens an email draft rather than sending mail from a server. Tests that instantiate PortfolioApp directly wrap it in ProviderScope, allowing providers to be overridden and isolated.
 
 
-## Neon glass theme
+## Theme
 
-Dark mode is the default, managed by Riverpod. The design uses a navy base, cyan/violet gradient actions, translucent gradient panels, fine luminous borders, and restrained hover glows. The static ambient light/grid backdrop is cached in its own RepaintBoundary. Panels use translucent gradients instead of per-card BackdropFilter effects; only the desktop navbar uses a small blur. Light mode remains available with a corresponding cool-toned palette. The browser loading screen, favicon, and manifest match the new default.
-
+Dark mode remains the default with a charcoal background, muted blue accent, solid panels and fine neutral borders. The default dark appearance is fixed; no theme toggle is shown. Buttons and the logo no longer use glow shadows; hover changes are small. Existing project images keep their original colors.
 
 ## Vercel
 
@@ -154,7 +153,7 @@ For a local build-script check using an already installed matching SDK, set `POR
 
 ## Expanded portfolio
 
-The page has ten navigable sections: Home, About, Expertise, Work, Case studies, Skills, Experience, Highlights, Resume, and Contact. Expertise describes application, game, and integration capabilities. A pinned, vertically controlled project-story gallery opens full case-study dialogs explaining challenges, approaches, engineering details, and outcomes from the supplied resume. Engineering highlights surface the existing 1,500 campaign levels, 2,000 validated puzzles, 400+ tests, and three platform families. Resume offers direct view/download actions.
+The page has nine navigable sections: Home, About, Expertise, Work, Case studies, Skills, Experience, Resume, and Contact. Expertise describes application, game, and integration capabilities. A pinned, vertically controlled project-story gallery opens full case-study dialogs explaining challenges, approaches, engineering details, and outcomes from the supplied resume. Resume offers direct view/download actions.
 
 The primary desktop navigation remains compact, with the additional sections accessible through More sections. The mobile drawer scrolls so all entries remain reachable on short viewports. Team Pulse, Blocktopus, and NovaStrike retain their requested order, screenshots, and live destinations. The expansion introduces no repeating background timers and retains the offscreen animation safeguards.
 
@@ -162,3 +161,11 @@ The primary desktop navigation remains compact, with the additional sections acc
 ## Behind the screens gallery
 
 The case-study section pins below the navbar while native vertical wheel scrolling or upward touch swipes advance through three project stories one at a time. It releases after the final story and reverses when scrolling back. Desktop uses a left introduction, wide cinematic cards, a next-card preview, and a progress line; mobile stacks a compact introduction above a fitted card. Previous/next controls, dot selection on wider layouts, and keyboard arrows also scroll to the selected story. Full stories open in responsive, scrollable dialogs, preserving the selected project when closed. `caseStudyPageProvider` holds selection in Riverpod; the page controller and hover state remain local. The gallery has no autoplay timer or per-frame backdrop blur.
+
+## Restrained styling pass
+
+The existing wording, images, links and section order remain unchanged. Hero copy uses a text layout in place of floating artwork; expertise uses divided rows. Solid surfaces, a muted blue accent, quieter hover states, and varied section spacing reduce repeated decoration. No hero project preview, title-card concept, new font package, or SDK upgrade is introduced.
+
+The hero includes a static, theme-aware Flutter development illustration (editor and phone wireframe). It uses CustomPainter with no additional dependencies or project screenshots.
+
+The sticky navbar is 64 logical pixels high, with a compact brand mark and adjusted section-scroll offsets. Theme switching and its provider have been removed; the existing dark theme is always used.
