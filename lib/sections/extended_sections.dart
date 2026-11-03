@@ -104,64 +104,6 @@ class _StoryPoint extends StatelessWidget {
   );
 }
 
-class HighlightsSection extends StatelessWidget {
-  const HighlightsSection({super.key});
-  @override
-  Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      const SectionTitle(
-        number: '07',
-        label: 'ENGINEERING HIGHLIGHTS',
-        title: 'Small details.\nSubstantial systems.',
-      ),
-      const SizedBox(height: 20),
-      _muted(
-        context,
-        'Selected implementation details from my projects and résumé.',
-      ),
-      const SizedBox(height: 32),
-      _TileGrid(
-        maxColumns: 4,
-        children: PortfolioData.engineeringHighlights
-            .map(
-              (item) => Container(
-                padding: const EdgeInsets.all(24),
-                decoration: AppTokens.glass(context),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      item.value,
-                      style: TextStyle(
-                        fontSize: 46,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: -2,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      item.label,
-                      style: const TextStyle(
-                        fontSize: 19,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    _muted(context, item.detail),
-                    const SizedBox(height: 20),
-                    _tag(context, item.project),
-                  ],
-                ),
-              ),
-            )
-            .toList(),
-      ),
-    ],
-  );
-}
-
 class ResumeSection extends StatelessWidget {
   const ResumeSection({super.key});
   @override
@@ -169,7 +111,7 @@ class ResumeSection extends StatelessWidget {
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       const SectionTitle(
-        number: '08',
+        number: '07',
         label: 'TAKE A CLOSER LOOK',
         title: 'The full picture.\nReady to download.',
       ),
@@ -273,6 +215,15 @@ class ResumeSection extends StatelessWidget {
   );
 }
 
+Widget _muted(BuildContext context, String text) => Text(
+  text,
+  style: TextStyle(
+    fontSize: 14,
+    height: 1.8,
+    color: Theme.of(context).hintColor,
+  ),
+);
+
 class _TileGrid extends StatelessWidget {
   final int maxColumns;
   final List<Widget> children;
@@ -296,15 +247,6 @@ class _TileGrid extends StatelessWidget {
     },
   );
 }
-
-Widget _muted(BuildContext context, String text) => Text(
-  text,
-  style: TextStyle(
-    fontSize: 14,
-    height: 1.8,
-    color: Theme.of(context).hintColor,
-  ),
-);
 
 Widget _tag(BuildContext context, String text) => Container(
   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),

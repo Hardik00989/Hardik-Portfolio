@@ -27,7 +27,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
   ScrollController get controller => viewport.controller;
   ValueNotifier<double> get scroll => viewport.parallax;
   ValueNotifier<Offset?> get cursor => viewport.cursor;
-  final keys = List.generate(10, (_) => GlobalKey());
+  final keys = List.generate(9, (_) => GlobalKey());
   static const labels = [
     'Home',
     'About',
@@ -36,7 +36,6 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
     'Case studies',
     'Skills',
     'Experience',
-    'Highlights',
     'Resume',
     'Contact',
   ];
@@ -245,9 +244,8 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                             _section(4, const CaseStudiesSection()),
                             _section(5, const SkillsSection()),
                             _section(6, const ExperienceSection()),
-                            _section(7, const HighlightsSection()),
-                            _section(8, const ResumeSection()),
-                            _section(9, const ContactSection()),
+                            _section(7, const ResumeSection()),
+                            _section(8, const ContactSection()),
                             const SizedBox(height: 70),
                             const Divider(),
                             const SizedBox(height: 20),
@@ -327,7 +325,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                               const Spacer(),
                               if (desktop)
                                 ...List.generate(5, (i) {
-                                  final index = [1, 3, 5, 6, 9][i];
+                                  final index = [1, 3, 5, 6, 8][i];
                                   return Padding(
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: 8,
@@ -352,7 +350,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                                   tooltip: 'More sections',
                                   icon: const Icon(Icons.more_horiz, size: 20),
                                   onSelected: go,
-                                  itemBuilder: (_) => [2, 4, 7, 8]
+                                  itemBuilder: (_) => [2, 4, 7]
                                       .map(
                                         (i) => PopupMenuItem(
                                           value: i,
@@ -366,7 +364,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                                 const SizedBox(width: 18),
                                 AnimatedButton(
                                   label: 'Let’s talk',
-                                  onTap: () => go(9),
+                                  onTap: () => go(8),
                                 ),
                               ],
                               if (!desktop)

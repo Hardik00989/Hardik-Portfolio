@@ -154,7 +154,7 @@ For a local build-script check using an already installed matching SDK, set `POR
 
 ## Expanded portfolio
 
-The page has ten navigable sections: Home, About, Expertise, Work, Case studies, Skills, Experience, Highlights, Resume, and Contact. Expertise describes application, game, and integration capabilities. A pinned, vertically controlled project-story gallery opens full case-study dialogs explaining challenges, approaches, engineering details, and outcomes from the supplied resume. Engineering highlights surface the existing 1,500 campaign levels, 2,000 validated puzzles, 400+ tests, and three platform families. Resume offers direct view/download actions.
+The page has nine navigable sections: Home, About, Expertise, Work, Case studies, Skills, Experience, Resume, and Contact. Expertise describes application, game, and integration capabilities. A pinned, vertically controlled project-story gallery opens full case-study dialogs explaining challenges, approaches, engineering details, and outcomes from the supplied resume. Resume offers direct view/download actions.
 
 The primary desktop navigation remains compact, with the additional sections accessible through More sections. The mobile drawer scrolls so all entries remain reachable on short viewports. Team Pulse, Blocktopus, and NovaStrike retain their requested order, screenshots, and live destinations. The expansion introduces no repeating background timers and retains the offscreen animation safeguards.
 

@@ -554,7 +554,7 @@ abstract final class PortfolioData {
 ## lib/utils/download.dart
 
 ```dart
-﻿export 'download_stub.dart' if (dart.library.js_interop) 'download_web.dart';
+export 'download_stub.dart' if (dart.library.js_interop) 'download_web.dart';
 ```
 
 
@@ -1961,7 +1961,7 @@ class _ContactSectionState extends ConsumerState<ContactSection> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SectionTitle(
-              number: '09',
+              number: '08',
               label: 'LET’S MAKE SOMETHING',
               title: 'Good things start\nwith a hello.',
             ),
@@ -2132,7 +2132,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
   ScrollController get controller => viewport.controller;
   ValueNotifier<double> get scroll => viewport.parallax;
   ValueNotifier<Offset?> get cursor => viewport.cursor;
-  final keys = List.generate(10, (_) => GlobalKey());
+  final keys = List.generate(9, (_) => GlobalKey());
   static const labels = [
     'Home',
     'About',
@@ -2141,7 +2141,6 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
     'Case studies',
     'Skills',
     'Experience',
-    'Highlights',
     'Resume',
     'Contact',
   ];
@@ -2350,9 +2349,8 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                             _section(4, const CaseStudiesSection()),
                             _section(5, const SkillsSection()),
                             _section(6, const ExperienceSection()),
-                            _section(7, const HighlightsSection()),
-                            _section(8, const ResumeSection()),
-                            _section(9, const ContactSection()),
+                            _section(7, const ResumeSection()),
+                            _section(8, const ContactSection()),
                             const SizedBox(height: 70),
                             const Divider(),
                             const SizedBox(height: 20),
@@ -2432,7 +2430,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                               const Spacer(),
                               if (desktop)
                                 ...List.generate(5, (i) {
-                                  final index = [1, 3, 5, 6, 9][i];
+                                  final index = [1, 3, 5, 6, 8][i];
                                   return Padding(
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: 8,
@@ -2457,7 +2455,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                                   tooltip: 'More sections',
                                   icon: const Icon(Icons.more_horiz, size: 20),
                                   onSelected: go,
-                                  itemBuilder: (_) => [2, 4, 7, 8]
+                                  itemBuilder: (_) => [2, 4, 7]
                                       .map(
                                         (i) => PopupMenuItem(
                                           value: i,
@@ -2471,7 +2469,7 @@ class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
                                 const SizedBox(width: 18),
                                 AnimatedButton(
                                   label: 'Let’s talk',
-                                  onTap: () => go(9),
+                                  onTap: () => go(8),
                                 ),
                               ],
                               if (!desktop)
@@ -2699,7 +2697,7 @@ class _NavbarBackdrop extends ConsumerWidget {
 ## firebase.json
 
 ```json
-﻿{"hosting":{"public":"build/web","ignore":["firebase.json","**/.*","**/node_modules/**"],"rewrites":[{"source":"**","destination":"/index.html"}]}}
+{"hosting":{"public":"build/web","ignore":["firebase.json","**/.*","**/node_modules/**"],"rewrites":[{"source":"**","destination":"/index.html"}]}}
 ```
 
 
@@ -3675,64 +3673,6 @@ class _StoryPoint extends StatelessWidget {
   );
 }
 
-class HighlightsSection extends StatelessWidget {
-  const HighlightsSection({super.key});
-  @override
-  Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      const SectionTitle(
-        number: '07',
-        label: 'ENGINEERING HIGHLIGHTS',
-        title: 'Small details.\nSubstantial systems.',
-      ),
-      const SizedBox(height: 20),
-      _muted(
-        context,
-        'Selected implementation details from my projects and résumé.',
-      ),
-      const SizedBox(height: 32),
-      _TileGrid(
-        maxColumns: 4,
-        children: PortfolioData.engineeringHighlights
-            .map(
-              (item) => Container(
-                padding: const EdgeInsets.all(24),
-                decoration: AppTokens.glass(context),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      item.value,
-                      style: TextStyle(
-                        fontSize: 46,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: -2,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      item.label,
-                      style: const TextStyle(
-                        fontSize: 19,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    _muted(context, item.detail),
-                    const SizedBox(height: 20),
-                    _tag(context, item.project),
-                  ],
-                ),
-              ),
-            )
-            .toList(),
-      ),
-    ],
-  );
-}
-
 class ResumeSection extends StatelessWidget {
   const ResumeSection({super.key});
   @override
@@ -3740,7 +3680,7 @@ class ResumeSection extends StatelessWidget {
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       const SectionTitle(
-        number: '08',
+        number: '07',
         label: 'TAKE A CLOSER LOOK',
         title: 'The full picture.\nReady to download.',
       ),
@@ -3844,6 +3784,15 @@ class ResumeSection extends StatelessWidget {
   );
 }
 
+Widget _muted(BuildContext context, String text) => Text(
+  text,
+  style: TextStyle(
+    fontSize: 14,
+    height: 1.8,
+    color: Theme.of(context).hintColor,
+  ),
+);
+
 class _TileGrid extends StatelessWidget {
   final int maxColumns;
   final List<Widget> children;
@@ -3867,15 +3816,6 @@ class _TileGrid extends StatelessWidget {
     },
   );
 }
-
-Widget _muted(BuildContext context, String text) => Text(
-  text,
-  style: TextStyle(
-    fontSize: 14,
-    height: 1.8,
-    color: Theme.of(context).hintColor,
-  ),
-);
 
 Widget _tag(BuildContext context, String text) => Container(
   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
